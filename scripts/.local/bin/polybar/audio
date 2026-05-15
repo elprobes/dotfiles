@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+# ==========================================
+# POLYBAR AUDIO WIDGET
+# PipeWire + Bluetooth + HDMI
+# ==========================================
+
+# Nerd Font icons
+ICON_SPEAKER="󰕾"
+ICON_HEADPHONES="󰋋"
+ICON_HDMI="󰍹"
+ICON_MUTED="󰖁"
+
+# Colori
+COLOR_NORMAL="#c0caf5"
+COLOR_MUTED="#f7768e"
+COLOR_BT="#9ece6a"
+COLOR_HDMI="#7aa2f7"
+
+truncate() {
+    local text="$1"
+    local max=24
+
+    if [ ${#text} -gt $max ]; then
+        echo "${text:0:$((max-1))}…"
+    else
+        echo "$text"
+    fi
+}
+
+while true; do
+
+    # Sink default
+    sink=$(wpctl status | awk '
+    /Sinks:/ {flag=1; next}
+    /Sources:/ {flag=0}
+
+    flag && /\*/ {
+
+        line=$0
+
+        sub(/^[[:space:]│├─*]+/, "", line)
+
+        sub(/^[0-9]+\.[[:space:]]*/, "", line)
+
+        sub(/[[:space:]]*\[vol:.*$/, "", line)
+
+        print line
+    }')
+
+    # Volume
+    vol=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
+
+    muted=$(echo "$vol" | grep -o MUTED)
+
+    volume=$(echo "$vol" | awk '{print int($2 * 100)}')
+
+    # Icona + colore
+    icon="$ICON_SPEAKER"
+    color="$COLOR_NORMAL"
+
+    if [[ "$sink" =~ bluez|Bluetooth ]]; then
+        icon="$ICON_HEADPHONES"
+        color="$COLOR_BT"
+
+    elif [[ "$sink" =~ HDMI ]]; then
+        icon="$ICON_HDMI"
+        color="$COLOR_HDMI"
+    fi
+
+    # Muted
+    if [ -n "$muted" ]; then
+
+        printf "%%{F%s}%s muted%%{F-}\n" \
+            "$COLOR_MUTED" \
+            "$ICON_MUTED"
+
+    else
+
+        sink=$(truncate "$sink")
+
+        printf "%%{F%s}%s%%{F-} %3d%% %s\n" \
+            "$color" \
+            "$icon" \
+            "$volume" \
+            "$sink"
+    fi
+
+    sleep 1
+
+done
