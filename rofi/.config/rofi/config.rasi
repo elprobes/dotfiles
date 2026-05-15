@@ -1,0 +1,21 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    font: "UbuntuMono Nerd Font Mono 11.5";
+    icon-theme: "Papirus";
+    display-drun: " Apps";
+    display-run: " Run";
+    display-window: " Windows";
+    drun-display-format: "{name}";
+}
+
+
+//@theme "/usr/share/rofi/themes/brotech.rasi"
+
+//@theme "/usr/share/rofi/themes/brotech-tn.rasi"
+
+//@theme "/usr/share/rofi/themes/brotech.rasi"
+
+//@theme "/usr/share/rofi/themes/brotech-tn.rasi"
+
+@theme "/home/brotech/.config/rofi/themes/brotech-tn.rasi"

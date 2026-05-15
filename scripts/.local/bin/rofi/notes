@@ -1,0 +1,194 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+folder="${HOME}/notes"
+terminal="kitty"
+
+# Notes glyph
+# 󰈙󰆍󰂺󰱼󰟶󰒓󰛨󰈮
+note_icon="󰟶"
+
+notify_low() {
+    notify-send -u low "$1" "$2"
+}
+
+notify_normal() {
+    notify-send -u normal "$1" "$2"
+}
+
+launch_nvim() {
+    local file="$1"
+
+    mkdir -p "$(dirname "$file")"
+
+    notify_low "Notes" "Opening $(basename "$file")"
+
+    setsid -f "$terminal" --class floating-note,floating-note nvim "$file" \
+        >/dev/null 2>&1
+}
+
+newnote() {
+    local base_dir input fullpath
+
+    base_dir="$(
+        find "$folder" -type d 2>/dev/null |
+        sort |
+        rofi -dmenu -p 'Base directory'
+    )" || exit 0
+
+    base_dir="${base_dir:-$folder}"
+
+    input="$(
+        rofi -dmenu -p 'Note path/name'
+    )" || exit 0
+
+    input="${input:-$(date +%F_%H-%M-%S)}"
+
+    input="${input#.}"
+    input="${input#/}"
+
+    [[ "$input" != *.md ]] && input="${input}.md"
+
+    fullpath="${base_dir}/${input}"
+
+    notify_low "Notes" "Created $(basename "$fullpath")"
+
+    launch_nvim "$fullpath"
+}
+
+delete_note() {
+    local file="$1"
+    local confirm
+
+    confirm="$(
+        printf "No\nYes" |
+        rofi -dmenu -p "Delete $(basename "$file")?"
+    )" || return 1
+
+    [[ "$confirm" == "Yes" ]] || return 1
+
+    rm -f -- "$file"
+
+    find "$folder" -type d -empty -delete 2>/dev/null || true
+
+    notify_normal "Notes" "Deleted $(basename "$file")"
+}
+
+copy_line_from_note() {
+    local file="$1"
+    local line
+    local clipboard_cmd
+
+    if command -v wl-copy >/dev/null 2>&1; then
+        clipboard_cmd="wl-copy"
+    elif command -v xclip >/dev/null 2>&1; then
+        clipboard_cmd="xclip -selection clipboard"
+    else
+        rofi -e "No clipboard utility found (wl-copy/xclip)"
+        return 1
+    fi
+
+    line="$(
+        grep -v '^[[:space:]]*$' "$file" |
+        rofi -dmenu -i -p "Copy line"
+    )" || return 1
+
+    printf '%s' "$line" | eval "$clipboard_cmd"
+
+    notify_low "Notes" "Line copied from $(basename "$file")"
+}
+
+execute_line_from_note() {
+    local file="$1"
+    local line
+
+    line="$(
+        grep -v '^[[:space:]]*$' "$file" |
+        rofi -dmenu -i -p "Execute command"
+    )" || return 1
+
+    [[ -n "$line" ]] || return 1
+
+    notify_low "Notes" "Executed command from $(basename "$file")"
+
+    setsid -f bash -c "$line" \
+        >/dev/null 2>&1
+}
+
+select_note() {
+    local choice raw_choice filepath exitcode
+
+    set +e
+
+    choice="$(
+        {
+            echo "${note_icon} New"
+
+            find "$folder" -type f -name '*.md' \
+                -printf '%T@|%P\n' 2>/dev/null |
+                sort -nr |
+                cut -d'|' -f2- |
+                sed "s/^/${note_icon} /"
+        } | rofi \
+            -dmenu \
+            -i \
+            -p 'Notes' \
+            -kb-custom-1 'Alt+d' \
+            -kb-custom-2 'Alt+r' \
+            -kb-custom-3 'Alt+x'
+    )"
+
+    exitcode=$?
+
+    set -e
+
+    raw_choice="${choice#${note_icon} }"
+
+    case "$exitcode" in
+        0)
+            case "$raw_choice" in
+                "New")
+                    newnote
+                    ;;
+                *.md)
+                    filepath="${folder}/${raw_choice}"
+                    launch_nvim "$filepath"
+                    ;;
+            esac
+            ;;
+
+        10)
+            [[ "$raw_choice" == *.md ]] || exit 0
+
+            filepath="${folder}/${raw_choice}"
+
+            if ! delete_note "$filepath"; then
+                select_note
+            fi
+            ;;
+
+        11)
+            [[ "$raw_choice" == *.md ]] || exit 0
+
+            filepath="${folder}/${raw_choice}"
+
+            copy_line_from_note "$filepath"
+            ;;
+
+        12)
+            [[ "$raw_choice" == *.md ]] || exit 0
+
+            filepath="${folder}/${raw_choice}"
+
+            execute_line_from_note "$filepath"
+            ;;
+    esac
+}
+
+main() {
+    mkdir -p "$folder"
+    select_note
+}
+
+main
