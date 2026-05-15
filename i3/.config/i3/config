@@ -211,6 +211,8 @@ bindsym Ctrl+minus exec ~/.local/bin/rofi/calchi
 
 bindsym Ctrl+ugrave exec ~/.local/bin/rofi/bg-select
 
+bindcode Ctrl+106 exec ~/.local/bin/rofi/audio-channels
+
 # -------------------------------------------------------------------
 # Workspaces
 # -------------------------------------------------------------------

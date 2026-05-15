@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+sinks=$(
+wpctl status | awk '
+/Sinks:/ {flag=1; next}
+/Sources:/ {flag=0}
+
+flag && /[0-9]+\./ {
+
+    line=$0
+
+    sub(/^[[:space:]│├─*]+/, "", line)
+
+    match(line, /^[0-9]+/)
+    id=substr(line, RSTART, RLENGTH)
+
+    sub(/^[0-9]+\.[[:space:]]*/, "", line)
+
+    sub(/[[:space:]]*\[vol:.*$/, "", line)
+
+    print id "|" line
+}'
+)
+
+chosen=$(echo "$sinks" | cut -d'|' -f2- | rofi -dmenu -p "Audio Output")
+
+[ -z "$chosen" ] && exit
+
+sink_id=$(echo "$sinks" | grep -F "|$chosen" | head -n1 | cut -d'|' -f1)
+
+# Imposta output default
+wpctl set-default "$sink_id"
+
+# Sposta stream audio attivi
+pactl list short sink-inputs | while read -r stream; do
+    stream_id=$(echo "$stream" | awk '{print $1}')
+    pactl move-sink-input "$stream_id" "$sink_id"
+done
