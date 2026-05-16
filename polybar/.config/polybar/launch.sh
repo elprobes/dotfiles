@@ -1,5 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 killall -q polybar
 
-polybar main &
+while pgrep -u $UID -x polybar >/dev/null; do
+ sleep 1
+done
+
+polybar top &
+polybar bottom &
