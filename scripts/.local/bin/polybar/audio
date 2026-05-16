@@ -106,7 +106,7 @@ while true; do
 
     else
 
-        printf "%%{F%s}%%{T4}%s%%{T-}%%{F-} %3d%% %s\n" \
+        printf "%%{F%s}%%{T3}%s%%{T-}%%{F-} %3d%% %s\n" \
             "$color" \
             "$icon" \
             "$volume" \

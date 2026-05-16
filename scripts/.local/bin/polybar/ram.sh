@@ -43,7 +43,7 @@ while true; do
     get_idx "$usage"
     idx=$?
 
-    printf "%3d%% %%{T4}󱤓%%{T-}%%{T2}%s%%{T-} \n" \
+    printf "%3d%% %%{T3}󱤓%%{T-}%%{T2}%s%%{T-} \n" \
         "$usage" \
         "${blocks[$idx]}"
 

@@ -95,7 +95,7 @@ while true; do
         get_battery_icon "$battery"
         idx=$?
 
-        printf "%%{F#7aa2f7}%s%%{F-} %%{F%s}%s %3d%% %%{F-}\n" \
+        printf "%%{F#7aa2f7}%%{T3}%s%%{T-}%%{F-} %%{F%s}%%{T3}%s%%{T-} %3d%% %%{F-}\n" \
             "$ICON_BT" \
             "$color" \
             "${battery_icons[$idx]}" \
@@ -103,7 +103,7 @@ while true; do
 
     else
 
-        printf "%%{F#7a7a7a}%s%%{F-}\n" \
+        printf "%%{F#7a7a7a}%%{T3}%s%%{T-}%%{F-}\n" \
             "$ICON_OFF"
 
     fi
