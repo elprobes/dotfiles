@@ -70,10 +70,6 @@ hide_edge_borders smart
 gaps inner 5
 gaps outer 0
 
-# spazio per:
-# top polybar (26px)
-# bottom polybar (26px)
-
 smart_gaps on
 smart_borders on
 
@@ -113,8 +109,6 @@ exec --no-startup-id ~/.local/bin/bluetooth/bluetooth-listener.sh
 # -------------------------------------------------------------------
 # Audio
 # -------------------------------------------------------------------
-
-set $refresh_i3status killall -SIGUSR1 i3status
 
 # Volume su
 bindcode $mod+86 exec --no-startup-id sh -c 'pamixer -i 5 && notify-send -u low -r 9991 "Volume: $(pamixer --get-volume)%"'
@@ -244,8 +238,7 @@ set $ws8  "8:󱂬"
 set $ws9  "9:󱂬"
 set $ws10 "10:󱂬"
 
-assign [class="Chromium"] $ws3
-
+assign [class="Chromium" instance="web.whatsapp.com"] $ws3
 
 # Switch workspace
 
