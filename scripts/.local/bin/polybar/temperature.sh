@@ -1,26 +1,67 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-temp_raw=$(< /sys/class/thermal/thermal_zone3/temp)
-temp=$((temp_raw / 1000))
+blocks=("⡀" "⡄" "⡆" "⡇" "⣇" "⣧" "⣷" "⣿")
 
-if (( temp < 40 )); then
-    icon=""
-    color="#7aa2f7"   # blue
-elif (( temp < 55 )); then
-    icon=""
-    color="#9ece6a"   # green
-elif (( temp < 70 )); then
-    icon=""
-    color="#e0af68"   # yellow
-elif (( temp < 85 )); then
-    icon=""
-    color="#ff9e64"   # orange
-else
-    icon=""
-    color="#f7768e"   # red
-fi
+TEMP_FILE="/sys/class/thermal/thermal_zone3/temp"
 
-printf "%%{F%s}%s %2d°C%%{F-}\n" \
-    "$color" \
-    "$icon" \
-    "$temp"
+[ ! -r "$TEMP_FILE" ] && exit 1
+
+get_idx() {
+    local temp=$1
+
+    if ((temp < 35)); then
+        return 0
+    elif ((temp < 45)); then
+        return 1
+    elif ((temp < 55)); then
+        return 2
+    elif ((temp < 65)); then
+        return 3
+    elif ((temp < 72)); then
+        return 4
+    elif ((temp < 78)); then
+        return 5
+    elif ((temp < 85)); then
+        return 6
+    else
+        return 7
+    fi
+}
+
+get_color() {
+    local temp=$1
+
+    if ((temp < 45)); then
+        REPLY="#9ece6a"
+
+    elif ((temp < 65)); then
+        REPLY="#e0af68"
+
+    elif ((temp < 80)); then
+        REPLY="#ff9e64"
+
+    else
+        REPLY="#f7768e"
+    fi
+}
+
+while true; do
+
+    read -r raw < "$TEMP_FILE"
+
+    temp=$((raw / 1000))
+
+    get_idx "$temp"
+    idx=$?
+
+    get_color "$temp"
+    color="$REPLY"
+
+    printf "%%{F%s}%2d°C %%{T3}󰔏%%{T-}%%{T2}%s%%{T-} %%{F-}\n" \
+        "$color" \
+        "$temp" \
+        "${blocks[$idx]}"
+
+    sleep 5
+
+done
