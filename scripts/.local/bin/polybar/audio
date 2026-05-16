@@ -1,61 +1,47 @@
 #!/usr/bin/env bash
 
-# ==========================================
-# POLYBAR AUDIO WIDGET
-# PipeWire + Bluetooth + HDMI
-# ==========================================
-
-# Nerd Font icons
 ICON_SPEAKER="󰕾"
 ICON_HEADPHONES="󰋋"
 ICON_HDMI="󰍹"
 ICON_MUTED="󰖁"
 
-# Colori
-COLOR_NORMAL="#c0caf5"
+COLOR_NORMAL="#ff7f50"
 COLOR_MUTED="#f7768e"
 COLOR_BT="#9ece6a"
-COLOR_HDMI="#7aa2f7"
+COLOR_HDMI="#ff7f50"
 
 truncate() {
     local text="$1"
-    local max=24
+    local max=14
 
-    if [ ${#text} -gt $max ]; then
-        echo "${text:0:$((max-1))}…"
+    if ((${#text} > max)); then
+        printf "%s…" "${text:0:max-1}"
     else
-        echo "$text"
+        printf "%s" "$text"
     fi
 }
 
-while true; do
+update_sink() {
+    local line
 
-    # Sink default
-    sink=$(wpctl status | awk '
-    /Sinks:/ {flag=1; next}
-    /Sources:/ {flag=0}
+    while IFS= read -r line; do
 
-    flag && /\*/ {
+        [[ $line != *"*"* ]] && continue
 
-        line=$0
+        line=${line#*│}
+        line=${line#*├─}
+        line=${line#*\*}
+        line=${line## }
 
-        sub(/^[[:space:]│├─*]+/, "", line)
+        line=$(printf "%s" "$line" | sed 's/^[[:space:]]*[0-9]\+\.\s*//')
 
-        sub(/^[0-9]+\.[[:space:]]*/, "", line)
+        line=${line%% \[vol:*}
 
-        sub(/[[:space:]]*\[vol:.*$/, "", line)
+        sink="$line"
+        break
 
-        print line
-    }')
+    done < <(wpctl status)
 
-    # Volume
-    vol=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
-
-    muted=$(echo "$vol" | grep -o MUTED)
-
-    volume=$(echo "$vol" | awk '{print int($2 * 100)}')
-
-    # Icona + colore
     icon="$ICON_SPEAKER"
     color="$COLOR_NORMAL"
 
@@ -68,16 +54,57 @@ while true; do
         color="$COLOR_HDMI"
     fi
 
-    # Muted
-    if [ -n "$muted" ]; then
+    sink=$(truncate "$sink")
+}
+
+parse_volume() {
+    local raw="$1"
+    local int
+    local dec
+
+    raw=${raw#Volume: }
+
+    int=${raw%%.*}
+    dec=${raw#*.}
+
+    dec=${dec:0:2}
+
+    while ((${#dec} < 2)); do
+        dec="${dec}0"
+    done
+
+    REPLY=$((10#$int * 100 + 10#$dec))
+}
+
+sink=""
+icon="$ICON_SPEAKER"
+color="$COLOR_NORMAL"
+
+counter=0
+
+update_sink
+
+while true; do
+
+    ((counter++))
+
+    if ((counter >= 10)); then
+        update_sink
+        counter=0
+    fi
+
+    read -r _ raw_volume muted <<< "$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
+
+    parse_volume "$raw_volume"
+    volume=$REPLY
+
+    if [[ "$muted" == "[MUTED]" ]]; then
 
         printf "%%{F%s}%s muted%%{F-}\n" \
             "$COLOR_MUTED" \
             "$ICON_MUTED"
 
     else
-
-        sink=$(truncate "$sink")
 
         printf "%%{F%s}%%{T4}%s%%{T-}%%{F-} %3d%% %s\n" \
             "$color" \
