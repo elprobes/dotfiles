@@ -87,7 +87,7 @@ exec --no-startup-id feh --bg-fill ~/.local/share/wallpapers/temet.png
 #exec_always --no-startup-id bash ~/.local/bin/wallpaper/wallpaper.sh #Ciclo sfondi ogni 300s
 exec --no-startup-id chromium --app=https://web.whatsapp.com
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
+exec --no-startup-id ~/.local/bin/bluetooth/bluetooth-listener.sh
 
 # -------------------------------------------------------------------
 # Audio

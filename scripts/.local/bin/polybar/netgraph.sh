@@ -10,7 +10,7 @@ max_history=12
 # ~75 Mbps ≈ 9375 KB/s
 max_speed=9500
 
-bars=("⣀" "⣄" "⣆" "⣇" "⣧" "⣷" "⣿" "⠿" "⠛" "⠉")
+bars=("⡀" "⡄" "⡆" "⡇" "⣇" "⣧" "⣷" "⣿" "⢿" "⢻" "⢹" "⢸" "⠸" "⠘" "⠈")
 
 rx_prev=$(<"/sys/class/net/$iface/statistics/rx_bytes")
 tx_prev=$(<"/sys/class/net/$iface/statistics/tx_bytes")
