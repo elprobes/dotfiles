@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sway NVIDIA
+Comment=Sway with NVIDIA proprietary drivers
+Exec=/home/brotech/.local/bin/sway-nvidia
+Type=Application
+DesktopNames=Sway

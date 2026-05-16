@@ -1,0 +1,88 @@
+set $mod Mod4
+
+font UbuntuMono Nerd Font Mono 12
+
+default_border pixel 0
+default_floating_border pixel 0
+
+gaps inner 8
+gaps outer 4
+
+smart_gaps on
+smart_borders on
+
+input type:keyboard {
+    xkb_layout it
+}
+
+exec waybar
+
+floating_modifier $mod
+
+# terminal
+bindsym $mod+Return exec foot
+
+# launcher
+bindsym $mod+d exec rofi -show drun
+
+# reload
+bindsym $mod+Shift+r reload
+
+# exit
+bindsym $mod+Shift+e exit
+
+# kill
+bindsym $mod+Shift+q kill
+
+# focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# split
+bindsym $mod+v split v
+bindsym $mod+b split h
+
+# layouts
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# fullscreen
+bindsym $mod+f fullscreen toggle
+
+# floating
+bindsym $mod+Shift+space floating toggle
+
+# resize mode
+mode "resize" {
+    bindsym h resize shrink width 10 px
+    bindsym j resize grow height 10 px
+    bindsym k resize shrink height 10 px
+    bindsym l resize grow width 10 px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# workspaces
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5

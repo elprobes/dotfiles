@@ -1,0 +1,57 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+
+  "modules-left": [
+    "sway/workspaces",
+    "custom/bt"
+  ],
+
+  "modules-center": [
+  ],
+
+  "modules-right": [
+    "custom/net",
+    "custom/cpu",
+    "custom/ram",
+    "custom/temp",
+    "custom/audio",
+    "custom/clock"
+  ],
+
+  "custom/bt": {
+    "exec": "~/.local/bin/waybar/bt-battery.sh",
+    "return-type": "json"
+  },
+
+  "custom/net": {
+    "exec": "~/.local/bin/waybar/netgraph.sh",
+    "return-type": "json"
+  },
+
+  "custom/cpu": {
+    "exec": "~/.local/bin/waybar/cpu.sh",
+    "return-type": "json"
+  },
+
+  "custom/ram": {
+    "exec": "~/.local/bin/waybar/ram.sh",
+    "return-type": "json"
+  },
+
+  "custom/temp": {
+    "exec": "~/.local/bin/waybar/temperature.sh",
+    "return-type": "json"
+  },
+
+  "custom/audio": {
+    "exec": "~/.local/bin/waybar/audio.sh",
+    "return-type": "json"
+  },
+
+  "custom/clock": {
+    "exec": "~/.local/bin/waybar/clock.sh",
+    "return-type": "json"
+  }
+}

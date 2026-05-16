@@ -1,0 +1,74 @@
+* {
+    border: none;
+    border-radius: 0;
+
+    font-family: "UbuntuMono Nerd Font Mono";
+    font-size: 16px;
+
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(26, 27, 38, 0.92);
+    color: #c0caf5;
+}
+
+#workspaces {
+    margin-left: 8px;
+}
+
+#workspaces button {
+    color: #7aa2f7;
+    padding: 0 6px;
+}
+
+#workspaces button.active {
+    color: #9ece6a;
+}
+
+#clock,
+#cpu,
+#memory,
+#pulseaudio {
+    padding: 0 10px;
+}
+
+#custom-bt {
+    padding: 0 5px;
+}
+
+#clock {
+    padding: 0 12px 0 10px;
+
+    color: #c0caf5;
+
+    font-family: "UbuntuMono Nerd Font Mono";
+    font-size: 16px;
+}
+
+#custom-net {
+    padding: 0 5px;
+}
+
+#custom-cpu {
+    padding: 0 5px;
+}
+
+#custom-ram {
+    padding: 0 5px;
+}
+
+#custom-temp {
+    padding: 0 5px;
+}
+
+#custom-audio {
+    padding: 0 10px;
+}
+
+#custom-clock {
+    padding: 0 14px 0 10px;
+
+    font-family: "UbuntuMono Nerd Font Mono";
+    font-size: 16px;
+}
