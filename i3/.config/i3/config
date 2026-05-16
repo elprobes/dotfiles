@@ -117,10 +117,10 @@ exec --no-startup-id ~/.local/bin/bluetooth/bluetooth-listener.sh
 set $refresh_i3status killall -SIGUSR1 i3status
 
 # Volume su
-bindcode $mod+86 exec --no-startup-id sh -c 'pamixer -i 5 && notify-send -r 9991 "Volume: $(pamixer --get-volume)%"'
+bindcode $mod+86 exec --no-startup-id sh -c 'pamixer -i 5 && notify-send -u low -r 9991 "Volume: $(pamixer --get-volume)%"'
 
 # Volume giù
-bindcode $mod+82 exec --no-startup-id sh -c 'pamixer -d 5 && notify-send -r 9991 "Volume: $(pamixer --get-volume)%"'
+bindcode $mod+82 exec --no-startup-id sh -c 'pamixer -d 5 && notify-send -u low -r 9991 "Volume: $(pamixer --get-volume)%"'
 
 # Mute
 bindcode $mod+63 exec --no-startup-id ~/.local/bin/audio/volume-toggle.sh
