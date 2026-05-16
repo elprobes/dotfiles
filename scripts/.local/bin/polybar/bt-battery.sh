@@ -30,7 +30,7 @@ while true; do
                 icon="󰁺"
             fi
 
-            printf "%%{F#7aa2f7}󰂯%%{F-} %%{F#9ece6a}%%{T3}%s%%{T-}%%{F-} %s%%\n" \
+            printf "%%{F#7aa2f7}%%{T4}󰂯%%{T-}%%{T4} 󰋋 %%{T-}%%{F-}%%{F#9ece6a}%%{T3}%s%%{T-}%%{F-} %s%%\n" \
                 "$icon" \
                 "$battery"
 
@@ -42,7 +42,7 @@ while true; do
 
     else
 
-        printf "%%{F#666666}%%{T3}󰋐%%{T-}%%{F-}\n"
+        printf "%%{F#7aa2f7}%%{T4}󰂲%%{T-}%%{F-}\n"
 
     fi
 
