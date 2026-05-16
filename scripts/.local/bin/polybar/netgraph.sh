@@ -12,38 +12,48 @@ max_speed=9500
 
 bars=("⡀" "⡄" "⡆" "⡇" "⣇" "⣧" "⣷" "⣿" "⢿" "⢻" "⢹" "⢸" "⠸" "⠘" "⠈")
 
-rx_prev=$(<"/sys/class/net/$iface/statistics/rx_bytes")
-tx_prev=$(<"/sys/class/net/$iface/statistics/tx_bytes")
+colors=(
+    "#7aa2f7" # blue
+    "#9ece6a" # green
+    "#e0af68" # yellow
+    "#f7768e" # red
+)
+
+rx_file="/sys/class/net/$iface/statistics/rx_bytes"
+tx_file="/sys/class/net/$iface/statistics/tx_bytes"
+
+rx_prev=$(<"$rx_file")
+tx_prev=$(<"$tx_file")
 
 get_bar() {
     local speed=$1
-
     local idx=$(( speed * ${#bars[@]} / max_speed ))
 
     (( idx >= ${#bars[@]} )) && idx=$((${#bars[@]} - 1))
 
-    echo "${bars[$idx]}"
+    REPLY="${bars[$idx]}"
 }
 
 get_color() {
     local speed=$1
 
     if (( speed < 1000 )); then
-        echo "#7aa2f7"   # blue
+        REPLY="${colors[0]}"
     elif (( speed < 4000 )); then
-        echo "#9ece6a"   # green
+        REPLY="${colors[1]}"
     elif (( speed < 7000 )); then
-        echo "#e0af68"   # yellow
+        REPLY="${colors[2]}"
     else
-        echo "#f7768e"   # red
+        REPLY="${colors[3]}"
     fi
 }
 
 while true; do
+
     sleep 1
 
-    rx_now=$(<"/sys/class/net/$iface/statistics/rx_bytes")
-    tx_now=$(<"/sys/class/net/$iface/statistics/tx_bytes")
+    rx_now=$(<"$rx_file")
+    tx_now=$(<"$tx_file")
 
     down=$(( (rx_now - rx_prev) / 1024 ))
     up=$(( (tx_now - tx_prev) / 1024 ))
@@ -51,13 +61,25 @@ while true; do
     rx_prev=$rx_now
     tx_prev=$tx_now
 
+    get_color "$down"
+    down_color="$REPLY"
+
+    get_bar "$down"
+    down_bar="$REPLY"
+
     history_down+=("$(printf '%%{F%s}%s%%{F-}' \
-        "$(get_color "$down")" \
-        "$(get_bar "$down")")")
+        "$down_color" \
+        "$down_bar")")
+
+    get_color "$up"
+    up_color="$REPLY"
+
+    get_bar "$up"
+    up_bar="$REPLY"
 
     history_up+=("$(printf '%%{F%s}%s%%{F-}' \
-        "$(get_color "$up")" \
-        "$(get_bar "$up")")")
+        "$up_color" \
+        "$up_bar")")
 
     (( ${#history_down[@]} > max_history )) && \
         history_down=("${history_down[@]:1}")
@@ -70,4 +92,5 @@ while true; do
         "$(printf '%s' "${history_down[@]}")" \
         "$up" \
         "$(printf '%s' "${history_up[@]}")"
+
 done
