@@ -1,48 +1,110 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-DEVICE="18:9C:2C:AD:3B:26"
+ICON_BT="󰂯"
+ICON_OFF="󰂲"
+
+battery_icons=(
+    "󰂎"
+    "󰁺"
+    "󰁻"
+    "󰁼"
+    "󰁽"
+    "󰁾"
+    "󰁿"
+    "󰂀"
+)
+
+get_device() {
+
+    while IFS= read -r line; do
+
+        case "$line" in
+            Device*)
+                REPLY=${line#Device }
+                REPLY=${REPLY%% *}
+                return
+                ;;
+        esac
+
+    done < <(bluetoothctl devices Connected)
+
+    REPLY=""
+}
+
+get_battery_icon() {
+    local battery=$1
+
+    if ((battery < 12)); then
+        return 0
+    elif ((battery < 25)); then
+        return 1
+    elif ((battery < 37)); then
+        return 2
+    elif ((battery < 50)); then
+        return 3
+    elif ((battery < 62)); then
+        return 4
+    elif ((battery < 75)); then
+        return 5
+    elif ((battery < 87)); then
+        return 6
+    else
+        return 7
+    fi
+}
 
 while true; do
 
-    info=$(bluetoothctl info "$DEVICE" 2>/dev/null)
+    battery=""
+    DEVICE=""
 
-    if grep -q "Connected: yes" <<< "$info"; then
+    get_device
+    DEVICE="$REPLY"
 
-        battery=$(awk -F'[()]' \
-            '/Battery Percentage/ {
-                gsub("%","",$2)
-                print $2
-            }' <<< "$info")
+    if [[ -n "$DEVICE" ]]; then
 
-        battery=${battery:-"?"}
+        while IFS= read -r line; do
 
-        if [ "$battery" != "?" ]; then
+            case "$line" in
+                *"Battery Percentage:"*)
+                    battery=$(grep -o '[0-9]\+' <<< "$line" | tail -n1)
+                    battery=$((10#$battery))
+                    break
+                    ;;
+            esac
 
-            if (( battery >= 90 )); then
-                icon="󰁹"
-            elif (( battery >= 70 )); then
-                icon="󰂁"
-            elif (( battery >= 50 )); then
-                icon="󰁿"
-            elif (( battery >= 30 )); then
-                icon="󰁼"
-            else
-                icon="󰁺"
-            fi
+        done < <(bluetoothctl info "$DEVICE")
 
-            printf "%%{F#7aa2f7}%%{T4}󰂯%%{T-}%%{T4} 󰋋 %%{T-}%%{F-}%%{F#9ece6a}%%{T3}%s%%{T-}%%{F-} %s%%\n" \
-                "$icon" \
-                "$battery"
+    fi
+
+    if [[ -n "$battery" ]]; then
+
+        if ((battery >= 80)); then
+            color="#9ece6a"
+
+        elif ((battery >= 50)); then
+            color="#e0af68"
+
+        elif ((battery >= 25)); then
+            color="#ff9e64"
 
         else
-
-            printf "%%{F#666666}󰋋 ?%%%%{F-}\n"
-
+            color="#f7768e"
         fi
+
+        get_battery_icon "$battery"
+        idx=$?
+
+        printf "%%{F#7aa2f7}%s%%{F-} %%{F%s}%s %3d%% %%{F-}\n" \
+            "$ICON_BT" \
+            "$color" \
+            "${battery_icons[$idx]}" \
+            "$battery"
 
     else
 
-        printf "%%{F#7aa2f7}%%{T4}󰂲%%{T-}%%{F-}\n"
+        printf "%%{F#7a7a7a}%s%%{F-}\n" \
+            "$ICON_OFF"
 
     fi
 
