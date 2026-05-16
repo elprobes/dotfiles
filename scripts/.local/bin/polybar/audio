@@ -79,7 +79,7 @@ while true; do
 
         sink=$(truncate "$sink")
 
-        printf "%%{F%s}%s%%{F-} %3d%% %s\n" \
+        printf "%%{F%s}%%{T4}%s%%{T-}%%{F-} %3d%% %s\n" \
             "$color" \
             "$icon" \
             "$volume" \

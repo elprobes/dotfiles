@@ -13,5 +13,5 @@ while true; do
     read_mb=$(awk "BEGIN {printf \"%.1f\", $read_kb/1024}")
     write_mb=$(awk "BEGIN {printf \"%.1f\", $write_kb/1024}")
 
-    printf "%6s MB/s 󰋊 %6s MB/s 󰋊\n" "$read_mb" "$write_mb"
+    printf "%6s MB/s %%{T4}⬇󰋊%%{T-} %6s MB/s %%{T4}󰋊⬆%%{T-}\n" "$read_mb" "$write_mb"
 done

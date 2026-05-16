@@ -7,11 +7,10 @@ while true; do
     info=$(bluetoothctl info "$DEVICE" 2>/dev/null)
 
     connected=$(echo "$info" | grep "Connected: yes")
-
+   
     if [ -n "$connected" ]; then
 
-        battery=$(echo "$info" | grep "Battery Percentage" | grep -o '[0-9]\+')
-
+    battery=$(echo "$info" | awk -F'[()]' '/Battery Percentage/ {gsub("%","",$2); print $2}')
         # Fallback se battery non disponibile
         [ -z "$battery" ] && battery="?"
 
@@ -30,8 +29,8 @@ while true; do
                 icon="󰥅"
             fi
 
-            printf "%%{F#9ece6a}%s%%{F-} %s%%\n" \
-                "$icon" \
+        printf "%%{F#9ece6a}%%{T4}%s%%{T-}%%{F-} %s%%\n" \
+            "$icon" \
                 "$battery"
 
         else
