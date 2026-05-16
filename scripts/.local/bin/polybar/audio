@@ -100,7 +100,7 @@ while true; do
 
     if [[ "$muted" == "[MUTED]" ]]; then
 
-        printf "%%{F%s}%s muted%%{F-}\n" \
+        printf "%%{F%s}%%{T3}%s%%{T-} muted%%{F-}\n" \
             "$COLOR_MUTED" \
             "$ICON_MUTED"
 
