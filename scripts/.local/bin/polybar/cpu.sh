@@ -27,5 +27,5 @@ while true; do
 
     [ "$idx" -gt 7 ] && idx=7
 
-    printf "CPU %%{T2}%s%%{T-} %3d%%\n" "${blocks[$idx]}" "$usage"
+    printf "%3d%% %%{T4}󰻠%%{T-}%%{T2}%s%%{T-} \n" "$usage" "${blocks[$idx]}"
 done
