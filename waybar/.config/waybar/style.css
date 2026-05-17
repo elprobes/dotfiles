@@ -3,7 +3,7 @@
     border-radius: 0;
 
     font-family: "UbuntuMono Nerd Font Mono";
-    font-size: 16px;
+    font-size: 14px;
 
     min-height: 0;
 }
@@ -13,61 +13,82 @@ window#waybar {
     color: #c0caf5;
 }
 
+/* -------------------------------------------------
+ * Workspaces
+ * ------------------------------------------------- */
+
 #workspaces {
     margin-left: 8px;
 }
 
 #workspaces button {
     color: #7aa2f7;
+
     padding: 0 6px;
+    margin: 0 4px;
 }
 
 #workspaces button.active {
     color: #9ece6a;
 }
 
-#clock,
-#cpu,
-#memory,
-#pulseaudio {
-    padding: 0 10px;
+#workspaces button:hover {
+    background: rgba(122, 162, 247, 0.12);
 }
+
+/* -------------------------------------------------
+ * Bluetooth
+ * ------------------------------------------------- */
 
 #custom-bt {
     padding: 0 5px;
+
+    margin-left: 5px;
 }
 
-#clock {
-    padding: 0 12px 0 10px;
-
-    color: #c0caf5;
-
-    font-family: "UbuntuMono Nerd Font Mono";
-    font-size: 16px;
-}
+/* -------------------------------------------------
+ * Network
+ * ------------------------------------------------- */
 
 #custom-net {
     padding: 0 5px;
+
+    margin-left: 18px;
 }
+
+/* -------------------------------------------------
+ * CPU / RAM / TEMP
+ * ------------------------------------------------- */
 
 #custom-cpu {
-    padding: 0 5px;
+    margin-left: 55px;
 }
 
-#custom-ram {
-    padding: 0 5px;
-}
-
+#custom-ram,
 #custom-temp {
     padding: 0 5px;
+
+    margin-left: 18px;
 }
+
+/* -------------------------------------------------
+ * Audio
+ * ------------------------------------------------- */
 
 #custom-audio {
     padding: 0 10px;
+
+    margin-left: 35px;
 }
+
+/* -------------------------------------------------
+ * Clock
+ * ------------------------------------------------- */
 
 #custom-clock {
     padding: 0 14px 0 10px;
+
+    margin-left: 28px;
 
     font-family: "UbuntuMono Nerd Font Mono";
     font-size: 16px;

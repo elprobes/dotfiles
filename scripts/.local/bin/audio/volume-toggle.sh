@@ -1,9 +1,24 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 pamixer -t
 
 if pamixer --get-mute | grep -q true; then
-    notify-send -r 9991 "   Muted"
+
+    notify-send \
+        -u low \
+        -h string:x-canonical-private-synchronous:volume \
+        "󰖁 Muted"
+
 else
-    notify-send -r 9991 "   Unmuted"
+
+    volume=$(pamixer --get-volume)
+
+    notify-send \
+        -u low \
+        -h string:x-canonical-private-synchronous:volume \
+        "󰕾 Volume" \
+        "${volume}%"
+
 fi

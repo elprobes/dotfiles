@@ -1,32 +1,55 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 DEVICE="18:9C:2C:AD:3B:26"
+
 DEVICE_NAME="Cuffie BT Sound Core"
+
+CONNECTED=0
 
 coproc BTCTL { bluetoothctl; }
 
-echo "scan on" >&"${BTCTL[1]}"
-
 while read -r line <&"${BTCTL[0]}"; do
 
-    printf '%q\n' "$line"
-
+    # -----------------------------------
     # Connected
+    # -----------------------------------
+
     if [[ "$line" == *"$DEVICE"* && "$line" == *"Connected: yes"* ]]; then
 
-        notify-send -u low \
-            "󰋋 Bluetooth" \
-            "$DEVICE_NAME connected"
+        if [[ $CONNECTED -eq 0 ]]; then
+
+            CONNECTED=1
+
+            notify-send \
+                -u low \
+                -h string:x-canonical-private-synchronous:bluetooth \
+                "󰋋 Bluetooth" \
+                "$DEVICE_NAME connected"
+        fi
     fi
 
+    # -----------------------------------
     # Disconnected
+    # -----------------------------------
+
     if [[ "$line" == *"$DEVICE"* && "$line" == *"Connected: no"* ]]; then
 
-        notify-send -u low \
-            "󰋋 Bluetooth" \
-            "$DEVICE_NAME disconnected"
+        if [[ $CONNECTED -eq 1 ]]; then
 
-        bluetoothctl connect "$DEVICE" >/dev/null 2>&1
+            CONNECTED=0
+
+            notify-send \
+                -u low \
+                -h string:x-canonical-private-synchronous:bluetooth \
+                "󰋋 Bluetooth" \
+                "$DEVICE_NAME disconnected"
+
+            sleep 2
+
+            bluetoothctl connect "$DEVICE" >/dev/null 2>&1 || true
+        fi
     fi
 
 done

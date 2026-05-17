@@ -43,8 +43,8 @@ client.background       $bg
 # Borders & Gaps
 # -------------------------------------------------------------------
 
-default_border pixel 0
-default_floating_border pixel 0
+default_border pixel 1
+default_floating_border pixel 1
 
 hide_edge_borders smart
 
@@ -96,11 +96,20 @@ floating_modifier $mod
 # Audio
 # -------------------------------------------------------------------
 
-bindcode $mod+86 exec sh -c 'pamixer -i 5 && notify-send -u low -r 9991 "Volume: $(pamixer --get-volume)%"'
+bindcode $mod+86 exec sh -c 'pamixer -i 5 && notify-send -u low -h string:x-canonical-private-synchronous:volume "󰕾 Volume" "$(pamixer --get-volume)%"'
 
-bindcode $mod+82 exec sh -c 'pamixer -d 5 && notify-send -u low -r 9991 "Volume: $(pamixer --get-volume)%"'
+bindcode $mod+82 exec sh -c 'pamixer -d 5 && notify-send -u low -h string:x-canonical-private-synchronous:volume "󰕾 Volume" "$(pamixer --get-volume)%"'
 
-bindcode $mod+63 exec ~/.local/bin/audio/volume-toggle.sh
+bindcode $mod+106 exec ~/.local/bin/audio/volume-toggle.sh
+
+# -------------------------------------------------------------------
+# Audio custom binds
+# -------------------------------------------------------------------
+bindsym XF86AudioRaiseVolume exec sh -c 'pamixer -i 5 && notify-send -u low -h string:x-canonical-private-synchronous:volume "󰕾 Volume" "$(pamixer --get-volume)%"'
+
+bindsym XF86AudioLowerVolume exec sh -c 'pamixer -d 5 && notify-send -u low -h string:x-canonical-private-synchronous:volume "󰕾 Volume" "$(pamixer --get-volume)%"'
+
+bindsym XF86AudioMute exec ~/.local/bin/audio/volume-toggle.sh
 
 # -------------------------------------------------------------------
 # Terminal

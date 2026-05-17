@@ -71,7 +71,7 @@ while true; do
     get_bar "$down"
     down_bar="$REPLY"
 
-    history_down+=("$(printf "<span foreground='%s' font='Cascadia Mono PL 14'>%s</span>" \
+    history_down+=("$(printf "<span foreground='%s' font='Cascadia Mono PL 12'>%s</span>" \
         "$down_color" \
         "$down_bar")")
 
@@ -81,7 +81,7 @@ while true; do
     get_bar "$up"
     up_bar="$REPLY"
 
-    history_up+=("$(printf "<span foreground='%s' font='Cascadia Mono PL 14'>%s</span>" \
+    history_up+=("$(printf "<span foreground='%s' font='Cascadia Mono PL 12'>%s</span>" \
         "$up_color" \
         "$up_bar")")
 
@@ -91,7 +91,7 @@ while true; do
     (( ${#history_up[@]} > max_history )) && \
         history_up=("${history_up[@]:1}")
 
-    text=$(printf "<span foreground='#9ece6a'>%6dKB/s <span font='Cascadia Mono PL 18' rise='-3000'>󰈀</span></span> %s <span foreground='#9ece6a'><span font='Cascadia Mono PL 18' rise='-3000'>󰁅</span></span> <span foreground='#9ece6a'>%6dKB/s <span font='Cascadia Mono PL 18' rise='-3000'>󰈀</span></span> %s <span foreground='#9ece6a'><span font='Cascadia Mono PL 18' rise='-3000'>󰁝</span></span>" \
+    text=$(printf "<span foreground='#9ece6a'>%6dKB/s <span font='Cascadia Mono PL 18' rise='-3000'>󰈀</span></span> %s <span foreground='#9ece6a'><span font='Cascadia Mono PL 14' rise='-3000'>󰁅</span></span> <span foreground='#9ece6a'>%6dKB/s <span font='Cascadia Mono PL 18' rise='-3000'>󰈀</span></span> %s <span foreground='#9ece6a'><span font='Cascadia Mono PL 14' rise='-3000'>󰁝</span></span>" \
         "$down" \
         "$(printf '%s' "${history_down[@]}")" \
         "$up" \
