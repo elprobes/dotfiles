@@ -18,7 +18,7 @@ window#waybar {
  * ------------------------------------------------- */
 
 #workspaces {
-    margin-left: 10px;
+    margin-left: 0px;
 }
 
 #workspaces button {
@@ -47,6 +47,17 @@ window#waybar {
 
 #workspaces button:hover {
     background: rgba(122, 162, 247, 0.12);
+}
+
+#workspaces button.urgent {
+
+    background-color: rgba(37, 211, 102, 0.14);
+
+    box-shadow: inset 0 -3px #25d366;
+}
+
+#workspaces button.urgent label {
+    color: #25d366;
 }
 
 /* -------------------------------------------------

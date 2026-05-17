@@ -12,6 +12,8 @@ battery_icons=(
     "󰁾"
     "󰁿"
     "󰂀"
+    "󰂂"
+    "󰁹"
 )
 
 get_device() {
@@ -34,22 +36,26 @@ get_device() {
 get_battery_icon() {
     local battery=$1
 
-    if ((battery < 12)); then
+    if ((battery <= 10)); then
         return 0
-    elif ((battery < 25)); then
+    elif ((battery <= 20)); then
         return 1
-    elif ((battery < 37)); then
+    elif ((battery <= 30)); then
         return 2
-    elif ((battery < 50)); then
+    elif ((battery <= 40)); then
         return 3
-    elif ((battery < 62)); then
+    elif ((battery <= 50)); then
         return 4
-    elif ((battery < 75)); then
+    elif ((battery <= 60)); then
         return 5
-    elif ((battery < 87)); then
+    elif ((battery <= 70)); then
         return 6
-    else
+    elif ((battery <= 80)); then
         return 7
+    elif ((battery <= 90)); then
+        return 8
+    else
+        return 9
     fi
 }
 
@@ -95,7 +101,7 @@ while true; do
         get_battery_icon "$battery"
         idx=$?
 
-        text=$(printf "<span foreground='#7aa2f7'><span font='Cascadia Mono PL 18' rise='-3000'>%s</span></span> <span foreground='%s'><span font='Cascadia Mono PL 18' rise='-3000'>%s</span> %3d%%</span>" \
+        text=$(printf "<span foreground='#7aa2f7'><span font='Cascadia Mono PL 14' rise='-1500'>%s</span></span> <span foreground='%s'><span font='Cascadia Mono PL 14' rise='-1500'>%s</span> %3d%%</span>" \
             "$ICON_BT" \
             "$color" \
             "${battery_icons[$idx]}" \

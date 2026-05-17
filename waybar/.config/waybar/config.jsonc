@@ -75,20 +75,28 @@
     ],
 
     "sway/workspaces": {
-      "format": "{icon}",
+        "format": "{windows}",
 
-      "format-icons": {
-        "1": " ",
-        "2": "󱂬",
-        "3": " ",
-        "4": "󱂬",
-        "5": "󱂬",
-        "6": "󱂬",
-        "7": "󱂬",
-        "8": "󱂬",
-        "9": "󱂬",
-        "10": "󱂬"
-      }
+        "window-rewrite": {
+
+            "class<foot>": "",
+
+            "class<firefox>": "",
+
+            "class<Chromium>": "",
+
+            "class<discord>": "",
+
+            "class<chrome-web.whatsapp.com__-Default>": "",
+
+            "class<Steam>": "",
+
+            "class<obsidian>": "󰠮",
+
+            "class<code>": "󰨞",
+
+            "class<floating-note>": "󰈙"
+        }
     },
 
     "tray": {
