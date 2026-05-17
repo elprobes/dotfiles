@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 ROFI_THEME='
 window {
     width: 38%;
@@ -42,49 +44,74 @@ case "$main_choice" in
             ps -u "$USER" -ww -o pid=,comm= |
             sed 's/^ *//' |
             rofi \
-            -dmenu \
-            -i \
-            -p "Kill process" \
-            -theme-str '
-            window {
-                width: 40%;
-            }
+                -dmenu \
+                -i \
+                -p "Kill process" \
+                -theme-str '
+                window {
+                    width: 40%;
+                }
 
-            listview {
-                lines: 12;
-                scrollbar: true;
-            }
+                listview {
+                    lines: 12;
+                    scrollbar: true;
+                }
 
-            element-text {
-                font: "UbuntuMono Nerd Font 11.5";
-            }
-            ')
+                element-text {
+                    font: "UbuntuMono Nerd Font 11.5";
+                }
+                '
+        )
 
         pid=$(awk '{print $1}' <<< "$selected")
 
         if [ -n "$pid" ]; then
+
             process_name=$(ps -p "$pid" -o comm=)
 
             kill "$pid" && \
             notify-send \
                 -u normal \
+                -r 9921 \
                 "󰗼 Process killed" \
                 "\"$process_name\" (PID $pid) terminated"
         fi
         ;;
 
     "󰍃  Logout")
-        notify-send -u low "󰍃 Logout" "Exiting i3..."
-        i3-msg exit
+
+        notify-send \
+            -u low \
+            -r 9922 \
+            "󰍃 Logout" \
+            "Exiting session..."
+
+        if [[ -n "$WAYLAND_DISPLAY" ]]; then
+            swaymsg exit
+        else
+            i3-msg exit
+        fi
         ;;
 
     "󰜉  Reboot")
-        notify-send -u low "󰜉 Reboot" "System rebooting..."
+
+        notify-send \
+            -u low \
+            -r 9923 \
+            "󰜉 Reboot" \
+            "System rebooting..."
+
         systemctl reboot -i
         ;;
 
     "󰐥  Shutdown")
-        notify-send -u low "󰐥 Shutdown" "Powering off..."
+
+        notify-send \
+            -u low \
+            -r 9924 \
+            "󰐥 Shutdown" \
+            "Powering off..."
+
         systemctl poweroff
         ;;
 

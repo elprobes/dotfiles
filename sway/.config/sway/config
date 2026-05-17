@@ -176,7 +176,7 @@ bindsym $mod+Tab focus mode_toggle
 # Custom
 # -------------------------------------------------------------------
 
-bindsym Ctrl+Shift+Insert exec ~/.local/bin/rofi/sway/closing
+bindsym Ctrl+Shift+Insert exec ~/.local/bin/rofi/closing
 
 bindsym Menu exec ~/.local/bin/rofi/sway/notes
 
