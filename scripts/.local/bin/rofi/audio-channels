@@ -1,11 +1,37 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 # ==========================================
 # NOTIFICHE
 # ==========================================
 
 send_notification() {
-    notify-send "Audio" "$1"
+    notify-send \
+        -u low \
+        -r 9911 \
+        "Audio" \
+        "$1"
+}
+
+# ==========================================
+# ROFI
+# ==========================================
+
+rofi_menu() {
+    rofi \
+        -dmenu \
+        -i \
+        -theme-str '
+            window {
+                width: 30%;
+            }
+
+            listview {
+                lines: 8;
+            }
+        ' \
+        "$@"
 }
 
 # ==========================================
@@ -22,23 +48,17 @@ get_sinks() {
 
         line=$0
 
-        # Rimuove caratteri grafici iniziali
         sub(/^[[:space:]│├─*]+/, "", line)
 
-        # Estrae ID
         match(line, /^[0-9]+/)
         id=substr(line, RSTART, RLENGTH)
 
-        # Sink attivo?
         active = ($0 ~ /\*/) ? 1 : 0
 
-        # Rimuove "57. "
         sub(/^[0-9]+\.[[:space:]]*/, "", line)
 
-        # Rimuove volume
         sub(/[[:space:]]*\[vol:.*$/, "", line)
 
-        # Icone
         icon="󰕾"
 
         if (line ~ /bluez/i)
@@ -108,11 +128,11 @@ move_streams() {
 
 set_sink_volume() {
 
-    sink_id="$1"
+    local sink_id="$1"
 
     options="10\n20\n30\n40\n50\n60\n70\n80\n90\n100"
 
-    chosen=$(echo -e "$options" | rofi -dmenu -p "Volume %")
+    chosen=$(echo -e "$options" | rofi_menu -p "Volume %")
 
     [ -z "$chosen" ] && exit
 
@@ -129,7 +149,7 @@ output_menu() {
 
     sinks=$(get_sinks)
 
-    chosen=$(echo "$sinks" | cut -d'|' -f2- | rofi -dmenu -p "Audio Output")
+    chosen=$(echo "$sinks" | cut -d'|' -f2- | rofi_menu -p "Audio Output")
 
     [ -z "$chosen" ] && exit
 
@@ -137,7 +157,7 @@ output_menu() {
 
     actions="Set Output\nSet Volume"
 
-    action=$(echo -e "$actions" | rofi -dmenu -p "Action")
+    action=$(echo -e "$actions" | rofi_menu -p "Action")
 
     case "$action" in
 
@@ -170,7 +190,7 @@ input_menu() {
 
     sources=$(get_sources)
 
-    chosen=$(echo "$sources" | cut -d'|' -f2- | rofi -dmenu -p "Microphone")
+    chosen=$(echo "$sources" | cut -d'|' -f2- | rofi_menu -p "Microphone")
 
     [ -z "$chosen" ] && exit
 
@@ -191,7 +211,7 @@ main_menu() {
 
     options="Output Audio\nInput Microphone"
 
-    choice=$(echo -e "$options" | rofi -dmenu -p "Audio")
+    choice=$(echo -e "$options" | rofi_menu -p "Audio")
 
     case "$choice" in
 

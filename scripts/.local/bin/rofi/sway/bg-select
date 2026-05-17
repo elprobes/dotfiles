@@ -54,7 +54,9 @@ wallpaper=$(find -L "$WALL_DIR" -type f -name "$selected" | head -n 1)
 
 [ -z "$wallpaper" ] && exit 1
 
-feh --bg-fill "$wallpaper"
+pkill swaybg 2>/dev/null || true
+
+swaybg -i "$wallpaper" -m fill &
 
 notify-send -u low \
     "Wallpaper applied" \

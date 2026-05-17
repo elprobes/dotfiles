@@ -180,13 +180,13 @@ bindsym Ctrl+Shift+Insert exec ~/.local/bin/rofi/sway/closing
 
 bindsym Menu exec ~/.local/bin/rofi/sway/notes
 
-bindsym Ctrl+space exec ~/.local/bin/rofi/sway/hstr
+bindsym Ctrl+space exec ~/.local/bin/rofi/hstr
 
 bindsym Ctrl+minus exec ~/.local/bin/rofi/sway/calchi
 
 bindsym Ctrl+ugrave exec ~/.local/bin/rofi/sway/bg-select
 
-bindcode Ctrl+106 exec ~/.local/bin/rofi/sway/audio-channels
+bindcode Ctrl+106 exec ~/.local/bin/rofi/audio-channels
 
 # -------------------------------------------------------------------
 # Workspaces

@@ -214,13 +214,13 @@ bindsym Ctrl+Shift+Insert exec ~/.local/bin/rofi/i3/closing
 
 bindsym Menu exec ~/.local/bin/rofi/i3/notes
 
-bindsym Ctrl+space exec ~/.local/bin/rofi/i3/hstr
+bindsym Ctrl+space exec ~/.local/bin/rofi/hstr
 
 bindsym Ctrl+minus exec ~/.local/bin/rofi/i3/calchi
 
 bindsym Ctrl+ugrave exec ~/.local/bin/rofi/i3/bg-select
 
-bindcode Ctrl+106 exec ~/.local/bin/rofi/i3/audio-channels
+bindcode Ctrl+106 exec ~/.local/bin/rofi/audio-channels
 
 
 # -------------------------------------------------------------------
