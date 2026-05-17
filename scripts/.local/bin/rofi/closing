@@ -38,6 +38,10 @@ main_choice=$(
 
 case "$main_choice" in
 
+    # -------------------------------------------------
+    # Kill process
+    # -------------------------------------------------
+
     "󰗼  Kill process")
 
         selected=$(
@@ -72,43 +76,55 @@ case "$main_choice" in
             kill "$pid" && \
             notify-send \
                 -u normal \
-                -r 9921 \
+                -h string:x-canonical-private-synchronous:processkill \
                 "󰗼 Process killed" \
                 "\"$process_name\" (PID $pid) terminated"
         fi
         ;;
 
+    # -------------------------------------------------
+    # Logout
+    # -------------------------------------------------
+
     "󰍃  Logout")
 
         notify-send \
             -u low \
-            -r 9922 \
+            -h string:x-canonical-private-synchronous:logout \
             "󰍃 Logout" \
             "Exiting session..."
 
-        if [[ -n "$WAYLAND_DISPLAY" ]]; then
+        if pgrep sway >/dev/null 2>&1; then
             swaymsg exit
         else
             i3-msg exit
         fi
         ;;
 
+    # -------------------------------------------------
+    # Reboot
+    # -------------------------------------------------
+
     "󰜉  Reboot")
 
         notify-send \
             -u low \
-            -r 9923 \
+            -h string:x-canonical-private-synchronous:reboot \
             "󰜉 Reboot" \
             "System rebooting..."
 
         systemctl reboot -i
         ;;
 
+    # -------------------------------------------------
+    # Shutdown
+    # -------------------------------------------------
+
     "󰐥  Shutdown")
 
         notify-send \
             -u low \
-            -r 9924 \
+            -h string:x-canonical-private-synchronous:shutdown \
             "󰐥 Shutdown" \
             "Powering off..."
 
