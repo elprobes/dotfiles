@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# -----------------------------------
+# Rofi Quick Calculator
+# qalc + clipboard + persistent history
+# -----------------------------------
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+HISTORY_FILE="${CACHE_DIR}/rofi-calc-history"
+
+MAX_HISTORY=20
+
+mkdir -p "$CACHE_DIR"
+
+touch "$HISTORY_FILE"
+
+# -----------------------------------
+# Clipboard
+# -----------------------------------
+
+copy_to_clipboard() {
+
+    if command -v wl-copy >/dev/null 2>&1; then
+        printf "%s" "$1" | wl-copy
+
+    elif command -v xclip >/dev/null 2>&1; then
+        printf "%s" "$1" | xclip -selection clipboard
+
+    else
+        notify-send \
+            -u normal \
+            -r 9931 \
+            "Calculator" \
+            "No clipboard utility found"
+
+        return 1
+    fi
+}
+
+# -----------------------------------
+# Main loop
+# -----------------------------------
+
+while true; do
+
+    MENU=$(cat "$HISTORY_FILE")
+
+    INPUT=$(
+        printf "%b" "$MENU" | rofi \
+            -dmenu \
+            -i \
+            -p "Calc" \
+            -kb-custom-1 "Alt+d" \
+            -theme-str '
+                window {
+                    width: 30%;
+                }
+
+                listview {
+                    lines: 10;
+                }
+
+                element-text {
+                    font: "UbuntuMono Nerd Font 11.5";
+                }
+            '
+    )
+
+    EXIT_CODE=$?
+
+    # -----------------------------------
+    # ALT+D -> clear history
+    # -----------------------------------
+
+    if [[ $EXIT_CODE -eq 10 ]]; then
+
+        > "$HISTORY_FILE"
+
+        notify-send \
+            -u low \
+            -r 9932 \
+            "Calculator" \
+            "History cleared"
+
+        continue
+    fi
+
+    # ESC
+
+    [[ $EXIT_CODE -ne 0 ]] && exit 0
+
+    # vuoto
+
+    [[ -z "$INPUT" ]] && continue
+
+    # -----------------------------------
+    # History selection
+    # -----------------------------------
+
+    if [[ "$INPUT" == *" = "* ]]; then
+
+        RESULT="${INPUT##*= }"
+
+        copy_to_clipboard "$RESULT"
+
+        notify-send \
+            -u low \
+            -r 9933 \
+            "Copied" \
+            "$RESULT"
+
+        exit 0
+    fi
+
+    # -----------------------------------
+    # New calculation
+    # -----------------------------------
+
+    RESULT=$(qalc -t "$INPUT" 2>/dev/null)
+
+    [[ -z "$RESULT" ]] && continue
+
+    RESULT="$(echo "$RESULT" | sed 's/^ *//')"
+
+    ENTRY="$INPUT = $RESULT"
+
+    tmpfile=$(mktemp)
+
+    grep -Fxv "$ENTRY" "$HISTORY_FILE" > "$tmpfile" || true
+
+    {
+        echo "$ENTRY"
+        cat "$tmpfile"
+    } | head -n "$MAX_HISTORY" > "$HISTORY_FILE"
+
+    rm -f "$tmpfile"
+
+done

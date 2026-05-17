@@ -182,7 +182,7 @@ bindsym Menu exec ~/.local/bin/rofi/sway/notes
 
 bindsym Ctrl+space exec ~/.local/bin/rofi/hstr
 
-bindsym Ctrl+minus exec ~/.local/bin/rofi/sway/calchi
+bindsym Ctrl+minus exec ~/.local/bin/rofi/calchi
 
 bindsym Ctrl+ugrave exec ~/.local/bin/rofi/sway/bg-select
 

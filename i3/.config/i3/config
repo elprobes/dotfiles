@@ -216,7 +216,7 @@ bindsym Menu exec ~/.local/bin/rofi/i3/notes
 
 bindsym Ctrl+space exec ~/.local/bin/rofi/hstr
 
-bindsym Ctrl+minus exec ~/.local/bin/rofi/i3/calchi
+bindsym Ctrl+minus exec ~/.local/bin/rofi/calchi
 
 bindsym Ctrl+ugrave exec ~/.local/bin/rofi/i3/bg-select
 
