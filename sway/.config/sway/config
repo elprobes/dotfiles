@@ -66,9 +66,9 @@ input type:keyboard {
 # Floating notes
 # -------------------------------------------------------------------
 
-for_window [class="floating-note"] floating enable
-for_window [class="floating-note"] resize set 1100 750
-for_window [class="floating-note"] move position center
+for_window [app_id="floating-note"] floating enable
+for_window [app_id="floating-note"] resize set 1100 750
+for_window [app_id="floating-note"] move position center
 
 # -------------------------------------------------------------------
 # Autostart

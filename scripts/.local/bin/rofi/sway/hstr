@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+HISTORY_FILE="${HOME}/.bash_history"
+
+main() {
+    local selected
+
+    selected="$(get_history | show_menu)"
+
+    [[ -z "${selected}" ]] && exit 0
+
+    copy_to_clipboard "${selected}"
+}
+
+get_history() {
+    tac "${HISTORY_FILE}" | awk '!seen[$0]++'
+}
+
+show_menu() {
+    rofi \
+        -dmenu \
+        -i \
+        -p "" \
+        -theme-str 'window {width: 60%;}'
+}
+
+copy_to_clipboard() {
+    printf '%s' "$1" | xclip -selection clipboard
+}
+
+main

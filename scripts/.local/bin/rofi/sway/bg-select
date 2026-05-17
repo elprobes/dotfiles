@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+WALL_DIR="$HOME/.local/share/wallpapers"
+
+selected=$(
+    find -L "$WALL_DIR" \
+        -type f \( \
+            -iname "*.jpg" -o \
+            -iname "*.jpeg" -o \
+            -iname "*.png" -o \
+            -iname "*.webp" \
+        \) | while read -r img; do
+
+        filename=$(basename "$img")
+
+        printf "%s\0icon\x1fthumbnail://%s\n" "$filename" "$img"
+
+    done | rofi \
+        -dmenu \
+        -i \
+        -p "Wallpapers" \
+        -show-icons \
+        -theme-str '
+            window {
+                width: 70%;
+            }
+
+            listview {
+                columns: 4;
+                lines: 3;
+                spacing: 12px;
+                cycle: true;
+                dynamic: true;
+            }
+
+            element {
+                orientation: vertical;
+                padding: 8px;
+            }
+
+            element-icon {
+                size: 196px;
+            }
+
+            element-text {
+                horizontal-align: 0.5;
+            }
+        '
+)
+
+[ -z "$selected" ] && exit 0
+
+wallpaper=$(find -L "$WALL_DIR" -type f -name "$selected" | head -n 1)
+
+[ -z "$wallpaper" ] && exit 1
+
+feh --bg-fill "$wallpaper"
+
+notify-send -u low \
+    "Wallpaper applied" \
+    "Wallpaper \"$selected\" applied"
