@@ -109,7 +109,7 @@ while true; do
 
     else
 
-        text=$(printf "<span foreground='#7a7a7a'><span font='Cascadia Mono PL 18' rise='-3000'>%s</span></span>" \
+        text=$(printf "<span foreground='#7a7a7a'><span font='Cascadia Mono PL 14' rise='-1500'>%s</span></span>" \
             "$ICON_OFF")
     fi
 

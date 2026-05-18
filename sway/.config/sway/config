@@ -43,8 +43,8 @@ client.background       $bg
 # Borders & Gaps
 # -------------------------------------------------------------------
 
-default_border pixel 1
-default_floating_border pixel 1
+default_border pixel 0
+default_floating_border pixel 0
 
 hide_edge_borders smart
 

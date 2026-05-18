@@ -95,7 +95,9 @@
 
             "class<code>": "󰨞",
 
-            "class<floating-note>": "󰈙"
+            "class<floating-note>": "󰈙",
+
+            "class<jetbrains-studio>": ""
         }
     },
 
