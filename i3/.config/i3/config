@@ -89,6 +89,9 @@ bar {
 
 exec --no-startup-id dex --autostart --environment i3
 
+exec --no-startup-id xset s on
+exec --no-startup-id xset +dpms
+
 exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id dunst
@@ -205,6 +208,10 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 bindsym $mod+Tab focus mode_toggle
 
+# -------------------------------------------------------------------
+# Toggle idle lock
+# -------------------------------------------------------------------
+bindsym $mod+Shift+i exec --no-startup-id ~/.local/bin/toggle-idle
 
 # -------------------------------------------------------------------
 # Custom

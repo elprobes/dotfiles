@@ -1,0 +1,23 @@
+#!/bin/bash
+
+STATE_FILE="/tmp/i3-idle-disabled"
+
+if [ -f "$STATE_FILE" ]; then
+
+    rm "$STATE_FILE"
+
+    xset +dpms
+    xset s on
+
+    notify-send "Idle" "Screen timeout enabled"
+
+else
+
+    touch "$STATE_FILE"
+
+    xset -dpms
+    xset s off
+
+    notify-send "Idle" "Screen timeout disabled"
+
+fi
