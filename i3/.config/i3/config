@@ -98,11 +98,12 @@ exec --no-startup-id dunst
 
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
-exec --no-startup-id feh --bg-fill ~/.local/share/wallpapers/temet.png
+exec --no-startup-id feh --bg-fill ~/.local/share/wallpapers/vico-planet-pixel.jpg
 
 #exec_always --no-startup-id bash ~/.local/bin/wallpaper/wallpaper.sh
 
-exec --no-startup-id chromium --app=https://web.whatsapp.com
+#exec --no-startup-id chromium --app=https://web.whatsapp.com
+exec --no-startup-id telegram-desktop
 
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
@@ -245,7 +246,7 @@ set $ws8  "8:󱂬"
 set $ws9  "9:󱂬"
 set $ws10 "10:󱂬"
 
-assign [class="Chromium" instance="web.whatsapp.com"] $ws3
+assign [class="TelegramDesktop" instance="TelegramDesktop"] $ws3
 
 # Switch workspace
 

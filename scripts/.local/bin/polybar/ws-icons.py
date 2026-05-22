@@ -23,6 +23,7 @@ ICONS = {
     "mpv": "󰐹",
     "telegramdesktop": "",
     "web.whatsapp.com": "",
+    "qutebrowser": "",
 }
 
 DEFAULT_ICON = "󱂬"
