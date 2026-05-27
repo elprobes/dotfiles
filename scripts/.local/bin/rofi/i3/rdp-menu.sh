@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Dopo aver inserito nuovo host nel file hosts.json lanciare il seguente comando
+# sostituendo <nome_campo> con valore corrispondente.
+#
+# Richiede pacchetti:
+#   - gnome-keyring
+#   - libsecret
+#
+# secret-tool store --label="RDP <label>" rdp <nome_keyring_password>
+#
+# e inserire la password di accesso per l utente remoto
+
 HOSTS_FILE="$HOME/.config/rdp-launcher/hosts.json"
 
 CHOICE=$(
@@ -7,8 +18,15 @@ CHOICE=$(
     .[] |
     "󰒋  \(.name) | \(.host):\(.port)"
     ' "$HOSTS_FILE" |
-    rofi -dmenu -i -p "RDP"
+        rofi -dmenu -i -p "RDP (Alt+e edit hosts)" -kb-custom-1 "Alt+e"
 )
+
+RETVAL=$?
+
+if [ "$RETVAL" -eq 10 ]; then
+    kitty -e nvim "$HOSTS_FILE"
+    exit
+fi
 
 [ -z "$CHOICE" ] && exit
 
