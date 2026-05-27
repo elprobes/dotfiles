@@ -56,6 +56,7 @@ client.background       $bg
 for_window [class="floating-note"] floating enable
 for_window [class="floating-note"] resize set 1100 750
 for_window [class="floating-note"] move position center
+for_window [class="xfreerdp"] move to workspace $ws9, focus
 
 
 # -------------------------------------------------------------------
@@ -227,6 +228,8 @@ bindsym Ctrl+space exec ~/.local/bin/rofi/hstr
 bindsym Ctrl+minus exec ~/.local/bin/rofi/calchi
 
 bindsym Ctrl+ugrave exec ~/.local/bin/rofi/i3/bg-select
+
+bindsym Ctrl+Shift+r exec ~/.local/bin/rofi/i3/rdp-menu.sh
 
 bindcode Ctrl+106 exec ~/.local/bin/rofi/audio-channels
 

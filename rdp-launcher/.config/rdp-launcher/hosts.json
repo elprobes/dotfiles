@@ -1,0 +1,16 @@
+[
+  {
+    "id": "evi_xampp",
+    "name": "EVI Xampp",
+    "host": "192.168.42.161",
+    "port": 9002,
+    "user": "EviSpa"
+  },
+  {
+    "id": "walter_2",
+    "name": "Walter 2",
+    "host": "192.168.42.150",
+    "port": 9001,
+    "user": "Walter"
+  }
+]
