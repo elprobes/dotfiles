@@ -1,5 +1,3 @@
--- `keymaps.lua` — Neovim keymaps per tastiera italiana
-
 -- =========================================================
 -- LEADER
 -- =========================================================
@@ -11,20 +9,17 @@ vim.g.maplocalleader = " "
 -- OPTIONS
 -- =========================================================
 
--- rende più naturale il mapping jk -> Esc
 vim.opt.timeoutlen = 250
 
 -- =========================================================
 -- ESC ERGONOMICO
 -- =========================================================
 
--- insert mode
 vim.keymap.set("i", "jk", "<Esc>", {
 	desc = "Exit insert mode",
 })
 
--- terminal mode
-vim.keymap.set("t", "jk", [[<C-\\><C-n>]], {
+vim.keymap.set("t", "jk", [[<C-\><C-n>]], {
 	desc = "Exit terminal mode",
 })
 
@@ -49,7 +44,7 @@ vim.keymap.set("n", "<leader>Q", "<cmd>qa!<CR>", {
 })
 
 -- =========================================================
--- CLEAR SEARCH HIGHLIGHT
+-- CLEAR SEARCH
 -- =========================================================
 
 vim.keymap.set("n", "<leader>h", "<cmd>nohlsearch<CR>", {
@@ -152,6 +147,10 @@ vim.keymap.set("n", "<leader>p", '"+p', {
 	desc = "Paste from system clipboard",
 })
 
+vim.keymap.set("x", "<leader>p", [['_dP]], {
+	desc = "Paste without overwriting register",
+})
+
 -- =========================================================
 -- TERMINAL
 -- =========================================================
@@ -162,9 +161,6 @@ vim.keymap.set("n", "<leader>tt", "<cmd>terminal<CR>", {
 
 -- =========================================================
 -- TELESCOPE
--- =========================================================
--- richiede:
--- https://github.com/nvim-telescope/telescope.nvim
 -- =========================================================
 
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", {
@@ -187,6 +183,15 @@ vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", {
 	desc = "Help tags",
 })
 
+vim.keymap.set(
+	"n",
+	"<leader>cd",
+	"<cmd>Telescope diagnostics<CR>",
+	{
+		desc = "Diagnostics",
+	}
+)
+
 -- =========================================================
 -- LSP
 -- =========================================================
@@ -195,25 +200,73 @@ vim.keymap.set("n", "gd", vim.lsp.buf.definition, {
 	desc = "Go to definition",
 })
 
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, {
+	desc = "Go to declaration",
+})
+
 vim.keymap.set("n", "gr", vim.lsp.buf.references, {
 	desc = "References",
+})
+
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {
+	desc = "Go to implementation",
 })
 
 vim.keymap.set("n", "K", vim.lsp.buf.hover, {
 	desc = "Hover documentation",
 })
 
-vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, {
-	desc = "Rename symbol",
-})
-
-vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, {
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {
 	desc = "Code action",
 })
 
+vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, {
+	desc = "Rename symbol",
+})
+
+vim.keymap.set("n", "<leader>cf", function()
+	require("conform").format({
+		lsp_fallback = true,
+		async = false,
+		timeout_ms = 500,
+	})
+end, {
+	desc = "Format file",
+})
+
 -- =========================================================
--- QUICKFIX / LOCATION LIST
+-- DIAGNOSTICS
 -- =========================================================
+
+vim.keymap.set("n", "[d", function()
+	vim.diagnostic.jump({
+		count = -1,
+		float = true,
+	})
+end, {
+	desc = "Previous diagnostic",
+})
+
+vim.keymap.set("n", "]d", function()
+	vim.diagnostic.jump({
+		count = 1,
+		float = true,
+	})
+end, {
+	desc = "Next diagnostic",
+})
+
+-- =========================================================
+-- QUICKFIX
+-- =========================================================
+
+vim.keymap.set("n", "<leader>cq", "<cmd>copen<CR>", {
+	desc = "Open quickfix",
+})
+
+vim.keymap.set("n", "<leader>cc", "<cmd>cclose<CR>", {
+	desc = "Close quickfix",
+})
 
 vim.keymap.set("n", "<leader>cn", "<cmd>cnext<CR>", {
 	desc = "Quickfix next",
@@ -221,14 +274,6 @@ vim.keymap.set("n", "<leader>cn", "<cmd>cnext<CR>", {
 
 vim.keymap.set("n", "<leader>cp", "<cmd>cprev<CR>", {
 	desc = "Quickfix previous",
-})
-
-vim.keymap.set("n", "<leader>co", "<cmd>copen<CR>", {
-	desc = "Open quickfix",
-})
-
-vim.keymap.set("n", "<leader>cc", "<cmd>cclose<CR>", {
-	desc = "Close quickfix",
 })
 
 -- =========================================================
@@ -246,14 +291,6 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- =========================================================
--- KEEP PASTE BUFFER
--- =========================================================
-
-vim.keymap.set("x", "<leader>p", [['_dP]], {
-	desc = "Paste without overwriting register",
-})
-
--- =========================================================
 -- DISABLE EX MODE
 -- =========================================================
 
@@ -266,14 +303,3 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", {
 	desc = "Toggle file explorer",
 })
-
--- =========================================================
--- NEO-TREE
--- =========================================================
-vim.keymap.set("n", "<leader>i", function()
-	require("conform").format({
-		lsp_fallback = true,
-		async = false,
-		timeout_ms = 500,
-	})
-end, { desc = "Format file" })
