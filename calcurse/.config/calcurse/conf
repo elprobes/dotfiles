@@ -3,7 +3,7 @@ appearance.compactpanels=yes
 appearance.defaultpanel=calendar
 appearance.layout=1
 
-appearance.headerline=no
+appearance.headerline=yes
 appearance.eventseparator=yes
 appearance.dayseparator=yes
 appearance.emptyline=yes
@@ -29,12 +29,11 @@ format.dayheading=%B %e, %Y
 general.autogc=yes
 general.autosave=yes
 general.confirmdelete=yes
-general.confirmquit=yes
+general.confirmquit=no
 general.firstdayofweek=monday
 general.multipledays=yes
 general.periodicsave=0
 general.systemevents=no
 
-notification.command=paplay /usr/share/sounds/freedesktop/stereo/message.oga && notify-send "󰃭 Calendar" "%m"
-notification.notifyall=yes
-notification.warning=300
+notification.command=~/.local/bin/calcurse/calcurse-daemon.sh
+notification.notifyall=all

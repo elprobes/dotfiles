@@ -100,6 +100,7 @@ exec --no-startup-id xset +dpms
 exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id dunst
+exec --no-startup-id calcurse --daemon
 
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
@@ -107,10 +108,8 @@ exec --no-startup-id feh --bg-fill ~/.local/share/wallpapers/vico-planet-pixel.j
 
 #exec_always --no-startup-id bash ~/.local/bin/wallpaper/wallpaper.sh
 
-#exec --no-startup-id chromium --app=https://web.whatsapp.com
+exec --no-startup-id chromium --app=https://web.whatsapp.com
 exec --no-startup-id telegram-desktop
-
-exec --no-startup-id calcurse --daemon
 
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
