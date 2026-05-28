@@ -58,6 +58,10 @@ for_window [class="floating-note"] resize set 1100 750
 for_window [class="floating-note"] move position center
 for_window [class="xfreerdp"] move to workspace $ws9, focus
 
+for_window [class="floating-calendar"] floating enable
+for_window [class="floating-calendar"] resize set 900 700
+for_window [class="floating-calendar"] move position center
+
 
 # -------------------------------------------------------------------
 # Borders & Gaps
@@ -79,9 +83,9 @@ smart_borders on
 # Disable i3 bar
 # -------------------------------------------------------------------
 
-bar {
-    mode invisible
-}
+#bar {
+#    mode invisible
+#}
 
 
 # -------------------------------------------------------------------
@@ -105,6 +109,8 @@ exec --no-startup-id feh --bg-fill ~/.local/share/wallpapers/vico-planet-pixel.j
 
 #exec --no-startup-id chromium --app=https://web.whatsapp.com
 exec --no-startup-id telegram-desktop
+
+exec --no-startup-id calcurse --daemon
 
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
