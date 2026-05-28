@@ -21,6 +21,8 @@ ICONS = {
     "pavucontrol": "󰕾",
     "vlc": "󰕼",
     "mpv": "󰐹",
+    "jetbrains-studio": "",
+    "xfreerdp": "",
     "telegramdesktop": "",
     "web.whatsapp.com": "",
     "qutebrowser": "",
