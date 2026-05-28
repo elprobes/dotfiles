@@ -2,7 +2,21 @@
 # i3wm — Tokyo Night
 # ===================================================================
 
-set $mod Mod4
+# -------------------------------------------------------------------
+# Modifier layout
+#
+# Mod4 → Super Left  (window manager)
+# Mod3 → Super Right (personal utility layer)
+#
+# ~/.Xmodmap:
+#
+# remove mod4 = Super_R
+# add mod3 = Super_R
+# -------------------------------------------------------------------
+
+set $mod  Mod4
+set $rmod Mod3
+
 
 # -------------------------------------------------------------------
 # Font
@@ -50,17 +64,19 @@ client.background       $bg
 
 
 # -------------------------------------------------------------------
-# Floating notes
+# Floating windows
 # -------------------------------------------------------------------
 
 for_window [class="floating-note"] floating enable
 for_window [class="floating-note"] resize set 1100 750
 for_window [class="floating-note"] move position center
-for_window [class="xfreerdp"] move to workspace $ws9, focus
 
 for_window [class="floating-calendar"] floating enable
 for_window [class="floating-calendar"] resize set 900 700
 for_window [class="floating-calendar"] move position center
+
+for_window [class="xfreerdp"] move to workspace $ws9, focus
+
 
 # -------------------------------------------------------------------
 # Borders & Gaps
@@ -79,50 +95,61 @@ smart_borders on
 
 
 # -------------------------------------------------------------------
-# Disable i3 bar
+# Bar
 # -------------------------------------------------------------------
 
-#bar {
-#    mode invisible
-#}
+# bar {
+#     mode invisible
+# }
 
 
 # -------------------------------------------------------------------
 # Autostart
 # -------------------------------------------------------------------
 
+# Modifier remap
+exec --no-startup-id xmodmap ~/.Xmodmap
+
+# XDG autostart
 exec --no-startup-id dex --autostart --environment i3
 
+# DPMS / screen blank
 exec --no-startup-id xset s on
 exec --no-startup-id xset +dpms
 
+# Compositor / notifications
 exec --no-startup-id picom
-exec --no-startup-id nm-applet
 exec --no-startup-id dunst
+
+# Network / bluetooth
+exec --no-startup-id nm-applet
+exec --no-startup-id ~/.local/bin/bluetooth/bluetooth-listener.sh
+
+# Calendar daemon
 exec --no-startup-id calcurse --daemon
 
+# Polybar
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
+# Wallpaper
 exec --no-startup-id feh --bg-fill ~/.local/share/wallpapers/vico-planet-pixel.jpg
 
-#exec_always --no-startup-id bash ~/.local/bin/wallpaper/wallpaper.sh
-
+# Messaging
 exec --no-startup-id chromium --app=https://web.whatsapp.com
 exec --no-startup-id Telegram
 
+# Lockscreen
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
-exec --no-startup-id ~/.local/bin/bluetooth/bluetooth-listener.sh
 
 
 # -------------------------------------------------------------------
 # Audio
 # -------------------------------------------------------------------
 
-# Volume su
+# Volume up
 bindcode $mod+86 exec --no-startup-id sh -c 'pamixer -i 5 && notify-send -u low -r 9991 "Volume: $(pamixer --get-volume)%"'
 
-# Volume giù
+# Volume down
 bindcode $mod+82 exec --no-startup-id sh -c 'pamixer -d 5 && notify-send -u low -r 9991 "Volume: $(pamixer --get-volume)%"'
 
 # Mute
@@ -139,28 +166,23 @@ tiling_drag modifier titlebar
 
 
 # -------------------------------------------------------------------
-# Terminal
+# Terminal & Launcher
 # -------------------------------------------------------------------
 
 bindsym $mod+Return exec kitty
-
-
-# -------------------------------------------------------------------
-# Application Launcher
-# -------------------------------------------------------------------
 
 bindsym $mod+d exec rofi -show drun
 
 
 # -------------------------------------------------------------------
-# Kill Window
+# Window Management
 # -------------------------------------------------------------------
 
 bindsym $mod+Shift+q kill
 
 
 # -------------------------------------------------------------------
-# Focus
+# Focus Navigation
 # -------------------------------------------------------------------
 
 bindsym $mod+j focus left
@@ -204,7 +226,7 @@ bindsym $mod+e layout toggle split
 
 
 # -------------------------------------------------------------------
-# Floating
+# Floating / Parent Focus
 # -------------------------------------------------------------------
 
 bindsym $mod+Shift+space floating toggle
@@ -212,30 +234,70 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
 bindsym $mod+a focus parent
+
 bindsym $mod+Tab focus mode_toggle
 
+
 # -------------------------------------------------------------------
-# Toggle idle lock
+# Idle / Lock
 # -------------------------------------------------------------------
+
 bindsym $mod+Shift+i exec --no-startup-id ~/.local/bin/toggle-idle
 
-# -------------------------------------------------------------------
-# Custom
-# -------------------------------------------------------------------
 
-bindsym Ctrl+Shift+Insert exec ~/.local/bin/rofi/closing
+# ===================================================================
+# Personal Utility Layer (Super Right / Mod3)
+# ===================================================================
+
+# -------------------------------------------------------------------
+# Notes
+#
+# Kept on Menu key for muscle memory and fast capture.
+# -------------------------------------------------------------------
 
 bindsym Menu exec ~/.local/bin/rofi/i3/notes
 
-bindsym Ctrl+space exec ~/.local/bin/rofi/hstr
 
-bindsym Ctrl+minus exec ~/.local/bin/rofi/calchi
+# -------------------------------------------------------------------
+# History / clipboard-like launcher
+# -------------------------------------------------------------------
 
-bindsym Ctrl+ugrave exec ~/.local/bin/rofi/i3/bg-select
+bindsym $rmod+space exec ~/.local/bin/rofi/hstr
 
-bindsym Ctrl+Shift+r exec ~/.local/bin/rofi/i3/rdp-menu.sh
 
-bindcode Ctrl+106 exec ~/.local/bin/rofi/audio-channels
+# -------------------------------------------------------------------
+# Calculators
+# -------------------------------------------------------------------
+
+bindsym $rmod+minus exec ~/.local/bin/rofi/calchi
+
+
+# -------------------------------------------------------------------
+# Wallpaper selector
+# -------------------------------------------------------------------
+
+bindsym $rmod+b exec ~/.local/bin/rofi/i3/bg-select
+
+
+# -------------------------------------------------------------------
+# RDP menu
+# -------------------------------------------------------------------
+
+bindsym $rmod+r exec ~/.local/bin/rofi/i3/rdp-menu.sh
+
+
+# -------------------------------------------------------------------
+# Audio channels / outputs
+# -------------------------------------------------------------------
+
+bindcode $rmod+106 exec ~/.local/bin/rofi/audio-channels
+
+
+# -------------------------------------------------------------------
+# Closing session helper
+# -------------------------------------------------------------------
+
+bindsym $rmod+q exec ~/.local/bin/rofi/closing
 
 
 # -------------------------------------------------------------------
@@ -256,7 +318,10 @@ set $ws10 "10:󱂬"
 assign [class="TelegramDesktop" instance="Telegram"] $ws3
 assign [class="Chromium"] $ws3
 
-# Switch workspace
+
+# -------------------------------------------------------------------
+# Workspace Switching
+# -------------------------------------------------------------------
 
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
@@ -270,7 +335,9 @@ bindsym $mod+9 workspace number $ws9
 bindsym $mod+0 workspace number $ws10
 
 
-# Move container to workspace
+# -------------------------------------------------------------------
+# Move Containers To Workspace
+# -------------------------------------------------------------------
 
 bindsym $mod+Shift+1 move container to workspace number $ws1
 bindsym $mod+Shift+2 move container to workspace number $ws2
