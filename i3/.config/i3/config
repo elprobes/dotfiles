@@ -62,7 +62,6 @@ for_window [class="floating-calendar"] floating enable
 for_window [class="floating-calendar"] resize set 900 700
 for_window [class="floating-calendar"] move position center
 
-
 # -------------------------------------------------------------------
 # Borders & Gaps
 # -------------------------------------------------------------------
@@ -109,7 +108,7 @@ exec --no-startup-id feh --bg-fill ~/.local/share/wallpapers/vico-planet-pixel.j
 #exec_always --no-startup-id bash ~/.local/bin/wallpaper/wallpaper.sh
 
 exec --no-startup-id chromium --app=https://web.whatsapp.com
-exec --no-startup-id telegram-desktop
+exec --no-startup-id Telegram
 
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
@@ -254,7 +253,8 @@ set $ws8  "8:󱂬"
 set $ws9  "9:󱂬"
 set $ws10 "10:󱂬"
 
-assign [class="TelegramDesktop" instance="TelegramDesktop"] $ws3
+assign [class="TelegramDesktop" instance="Telegram"] $ws3
+assign [class="Chromium"] $ws3
 
 # Switch workspace
 

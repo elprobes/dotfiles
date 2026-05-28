@@ -12,7 +12,7 @@ appearance.emptyday=-
 appearance.notifybar=yes
 appearance.sidebarwidth=3
 
-appearance.theme=yellow on default
+appearance.theme=blue on default
 appearance.todoview=hide-completed
 appearance.headingpos=right-justified
 
@@ -37,3 +37,4 @@ general.systemevents=no
 
 notification.command=~/.local/bin/calcurse/calcurse-daemon.sh
 notification.notifyall=all
+notification.warning=300
