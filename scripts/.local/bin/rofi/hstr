@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-HISTORY_FILE="${HOME}/.bash_history"
+HISTORY_FILE="${HOME}/.history"
 
 main() {
     local selected
@@ -15,7 +15,16 @@ main() {
 }
 
 get_history() {
-    tac "${HISTORY_FILE}" | awk '!seen[$0]++'
+
+    # Gestisce sia il formato zsh:
+    # : 1748645000:0;comando
+    #
+    # sia il formato bash:
+    # comando
+
+    sed 's/^: [0-9]*:[0-9]*;//' "${HISTORY_FILE}" |
+    tac |
+    awk 'length($0) && !seen[$0]++'
 }
 
 show_menu() {
@@ -27,6 +36,7 @@ show_menu() {
 }
 
 copy_to_clipboard() {
+
     if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]] \
         && command -v wl-copy >/dev/null 2>&1; then
 
@@ -37,7 +47,8 @@ copy_to_clipboard() {
         printf '%s' "$1" | xclip -selection clipboard
 
     else
-        notify-send "Clipboard" "No clipboard utility found"
+        notify-send "Clipboard" \
+            "No clipboard utility found"
         return 1
     fi
 }
