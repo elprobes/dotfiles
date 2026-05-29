@@ -4,6 +4,9 @@ return {
 		formatters_by_ft = {
 			lua = { "stylua" },
 
+            sh = { "shfmt" },
+			bash = { "shfmt" },
+
 			javascript = { "prettier" },
 			typescript = { "prettier" },
 

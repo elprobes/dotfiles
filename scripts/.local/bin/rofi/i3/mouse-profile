@@ -1,0 +1,354 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+MOUSE="Cooler Master Technology Inc. MM530"
+
+STATE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
+STATE_FILE="${STATE_DIR}/mouse-profile"
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/mouse"
+CONFIG_FILE="${CONFIG_DIR}/profiles.conf"
+
+declare -A PROFILES=()
+PROFILE_ORDER=()
+
+ensure_config() {
+
+    mkdir -p "$CONFIG_DIR"
+
+    if [[ ! -f "$CONFIG_FILE" ]]; then
+        cat >"$CONFIG_FILE" <<'EOF'
+FPS="flat|-0.4|0"
+Desktop="adaptive|0|0"
+Precision="flat|-0.8|0"
+Reading="adaptive|-0.7|1"
+Coding="adaptive|-0.2|0"
+
+PROFILE_ORDER=(
+    "FPS"
+    "Desktop"
+    "Precision"
+    "Reading"
+    "Coding"
+)
+EOF
+    fi
+}
+
+load_profiles() {
+
+    declare -gA PROFILES=()
+
+    # shellcheck disable=SC1090
+    source "$CONFIG_FILE"
+
+    for profile in "${PROFILE_ORDER[@]}"; do
+        PROFILES["$profile"]="${!profile}"
+    done
+}
+
+edit_profiles() {
+
+    setsid -f kitty nvim "$CONFIG_FILE" \
+        >/dev/null 2>&1
+}
+
+notify() {
+    notify-send -u low "Mouse Profile" "$1"
+}
+
+set_flat() {
+    xinput set-prop "$MOUSE" \
+        "libinput Accel Profile Enabled" \
+        0, 1, 0
+}
+
+set_adaptive() {
+    xinput set-prop "$MOUSE" \
+        "libinput Accel Profile Enabled" \
+        1, 0, 0
+}
+
+set_natural_scroll() {
+    local state="$1"
+
+    xinput set-prop "$MOUSE" \
+        "libinput Natural Scrolling Enabled" \
+        "$state"
+
+}
+
+save_state() {
+    local speed profile_raw profile scroll
+
+    speed="$(
+        xinput list-props "$MOUSE" |
+            grep "^.*Accel Speed (" |
+            head -n1 |
+            cut -d: -f2 |
+            xargs
+    )"
+
+    speed="$(printf "%.2f" "$speed")"
+
+    profile_raw="$(
+        xinput list-props "$MOUSE" |
+            grep "^.*Accel Profile Enabled (" |
+            head -n1 |
+            cut -d: -f2 |
+            tr -d ' \t'
+    )"
+
+    scroll="$(
+        xinput list-props "$MOUSE" |
+            grep "^.*Natural Scrolling Enabled (" |
+            head -n1 |
+            cut -d: -f2 |
+            xargs
+    )"
+
+    case "$profile_raw" in
+    "1,0,0")
+        profile="adaptive"
+        ;;
+    "0,1,0")
+        profile="flat"
+        ;;
+    *)
+        profile="unknown"
+        ;;
+    esac
+
+    if [[ "$scroll" == "1" ]]; then
+        scroll="on"
+    else
+        scroll="off"
+    fi
+
+    mkdir -p "$STATE_DIR"
+
+    cat >"$STATE_FILE" <<EOF
+
+profile="$profile"
+speed="$speed"
+natural_scroll="$scroll"
+active_profile="${ACTIVE_PROFILE:-Custom}"
+EOF
+}
+
+apply_profile() {
+    local name="$1"
+    local config accel speed scroll
+
+    config="${PROFILES[$name]}"
+
+    IFS='|' read -r accel speed scroll <<<"$config"
+
+    if [[ "$accel" == "flat" ]]; then
+        set_flat
+    else
+        set_adaptive
+    fi
+
+    xinput set-prop "$MOUSE" \
+        "libinput Accel Speed" \
+        "$speed"
+
+    set_natural_scroll "$scroll"
+
+    ACTIVE_PROFILE="$name"
+
+    save_state
+
+    notify "$name profile enabled"
+
+}
+
+set_speed() {
+    local speed
+
+    speed="$(
+        printf '%s\n' \
+            '-0.8' \
+            '-0.6' \
+            '-0.4' \
+            '-0.2' \
+            '0' \
+            '0.2' \
+            '0.4' \
+            '0.6' \
+            '0.8' \
+            'Custom' |
+            rofi -dmenu -i -p "Speed"
+    )" || return
+
+    if [[ "$speed" == "Custom" ]]; then
+        speed="$(
+            rofi -dmenu -p "Value (-1.0 to 1.0)"
+        )" || return
+
+        [[ -n "$speed" ]] || return
+    fi
+
+    xinput set-prop "$MOUSE" \
+        "libinput Accel Speed" \
+        "$speed"
+
+    unset ACTIVE_PROFILE
+
+    save_state
+
+    notify "Speed set to $speed"
+
+}
+
+set_acceleration() {
+    local choice
+
+    choice="$(
+        printf '%s\n' \
+            'Adaptive' \
+            'Flat' |
+            rofi -dmenu -i -p "Acceleration"
+    )" || return
+
+    case "$choice" in
+    Adaptive)
+        set_adaptive
+        ;;
+    Flat)
+        set_flat
+        ;;
+    *)
+        return
+        ;;
+    esac
+
+    unset ACTIVE_PROFILE
+
+    save_state
+
+    notify "Acceleration: $choice"
+
+}
+
+toggle_natural_scroll() {
+    local current
+
+    current="$(
+        xinput list-props "$MOUSE" |
+            grep "^.*Natural Scrolling Enabled (" |
+            head -n1 |
+            cut -d: -f2 |
+            xargs
+    )"
+
+    if [[ "$current" == "1" ]]; then
+        set_natural_scroll 0
+        notify "Natural scrolling disabled"
+    else
+        set_natural_scroll 1
+        notify "Natural scrolling enabled"
+    fi
+
+    unset ACTIVE_PROFILE
+
+    save_state
+
+}
+
+show_current() {
+
+    [[ -f "$STATE_FILE" ]] || save_state
+
+    local active_profile=""
+    local profile=""
+    local speed=""
+    local natural_scroll=""
+
+    # shellcheck disable=SC1090
+    source "$STATE_FILE"
+
+    printf '%s\n' \
+        "Active Profile: $active_profile" \
+        "Acceleration: $profile" \
+        "Speed: $speed" \
+        "Natural Scroll: $natural_scroll" |
+        rofi -dmenu \
+            -p "Mouse Status" \
+            -no-custom
+
+}
+
+main() {
+
+    mkdir -p "$STATE_DIR"
+
+    ensure_config
+    load_profiles
+
+    local choice
+    local exitcode
+
+    set +e
+
+    choice="$(
+        {
+            for profile in "${PROFILE_ORDER[@]}"; do
+                printf '󰍽 %s\n' "$profile"
+            done
+
+            printf '%s\n' \
+                '────────────' \
+                '󰾆 Speed' \
+                '󰾆 Acceleration' \
+                '󰾆 Natural Scroll' \
+                '────────────' \
+                '󰋼 Status'
+        } | rofi \
+            -dmenu \
+            -i \
+            -p "Mouse" \
+            -kb-custom-1 "Alt+e"
+    )"
+
+    exitcode=$?
+
+    set -e
+
+    case "$exitcode" in
+        1)
+            exit 0
+            ;;
+        10)
+            edit_profiles
+            exit 0
+            ;;
+    esac
+
+    case "$choice" in
+        "󰍽 "*)
+            apply_profile "${choice#󰍽 }"
+            ;;
+
+        "󰾆 Speed")
+            set_speed
+            ;;
+
+        "󰾆 Acceleration")
+            set_acceleration
+            ;;
+
+        "󰾆 Natural Scroll")
+            toggle_natural_scroll
+            ;;
+
+        "󰋼 Status")
+            show_current
+            ;;
+    esac
+}
+
+main

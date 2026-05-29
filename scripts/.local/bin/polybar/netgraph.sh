@@ -88,7 +88,7 @@ while true; do
     (( ${#history_up[@]} > max_history )) && \
         history_up=("${history_up[@]:1}")
 
-    printf "%%{F#9ece6a}%6dKB/s %%{T3}󰈀%%{T-}%%{F-} %s %%{F#9ece6a}%%{T3}󰁅%%{T-}%%{F-} %%{F#9ece6a}%6dKB/s %%{T3}󰈀%%{T-}%%{F-} %s %%{F#9ece6a}%%{T3}󰁝%%{T-}%%{F-}\n" \
+    printf "%%{F#9ece6a}%6dKB/s %%{T3}󰈀%%{T-}%%{F-} %s %%{F#9ece6a}%%{T2}󰁅%%{T-}%%{F-} %%{F#9ece6a}%6dKB/s %%{T3}󰈀%%{T-}%%{F-} %s %%{F#9ece6a}%%{T2}󰁝%%{T-}%%{F-}\n" \
         "$down" \
         "$(printf '%s' "${history_down[@]}")" \
         "$up" \

@@ -14,7 +14,7 @@ appearance.sidebarwidth=3
 
 appearance.theme=blue on default
 appearance.todoview=hide-completed
-appearance.headingpos=right-justified
+appearance.headingpos=left-justified
 
 daemon.enable=yes
 daemon.log=no

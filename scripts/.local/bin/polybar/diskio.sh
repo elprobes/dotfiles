@@ -77,7 +77,7 @@ while true; do
     read_human=$(human "$read_kb")
     write_human=$(human "$write_kb")
 
-    printf "%s ⬆%%{T3}󰋊%%{T-}%%{T2}%s%%{T-} %s ⬇%%{T3}󰋊%%{T-}%%{T2}%s%%{T-}\n" \
+    printf "%s %%{T2}󰁝%%{T-}%%{T3}󰋊%%{T-}%%{T2}%s%%{T-} %s %%{T2}󰁅%%{T-}%%{T3}󰋊%%{T-}%%{T2}%s%%{T-}\n" \
         "$read_human" \
         "${blocks[$read_idx]}" \
         "$write_human" \

@@ -299,6 +299,12 @@ bindcode $rmod+106 exec ~/.local/bin/rofi/audio-channels
 
 bindsym $rmod+q exec ~/.local/bin/rofi/closing
 
+# -------------------------------------------------------------------
+# Mouse settings helper
+# -------------------------------------------------------------------
+
+bindsym $rmod+m exec ~/.local/bin/rofi/i3/mouse-profile
+
 
 # -------------------------------------------------------------------
 # Workspaces

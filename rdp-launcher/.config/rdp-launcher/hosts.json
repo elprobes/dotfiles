@@ -7,6 +7,12 @@
     "user": "EviSpa"
   },
   {
+    "id": "walter",
+    "name": "Walter",
+    "host": "192.168.42.217",
+    "user": "Walter Sansone"
+  },
+  {
     "id": "walter_2",
     "name": "Walter 2",
     "host": "192.168.42.150",

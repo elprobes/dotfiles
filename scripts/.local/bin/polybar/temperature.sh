@@ -57,7 +57,7 @@ while true; do
     get_color "$temp"
     color="$REPLY"
 
-    printf "%%{F%s}%2d°C %%{T3}󰔏%%{T-}%%{T2}%s%%{T-} %%{F-}\n" \
+    printf "%%{F%s}%2d°C %%{T4}%%{T-}%%{T2}%s%%{T-} %%{F-}\n" \
         "$color" \
         "$temp" \
         "${blocks[$idx]}"
