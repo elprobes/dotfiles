@@ -77,6 +77,9 @@ for_window [class="floating-calendar"] move position center
 
 for_window [class="xfreerdp"] move to workspace $ws9, focus
 
+for_window [class="yazi-float"] floating enable
+for_window [class="yazi-float"] move position 150 55 
+for_window [class="yazi-float"] resize set 1600 950
 
 # -------------------------------------------------------------------
 # Borders & Gaps
@@ -248,6 +251,13 @@ bindsym $mod+Shift+i exec --no-startup-id ~/.local/bin/toggle-idle
 # ===================================================================
 # Personal Utility Layer (Super Right / Mod3)
 # ===================================================================
+
+# -------------------------------------------------------------------
+# File manager - yazi
+# -------------------------------------------------------------------
+
+bindsym $rmod+f exec kitty --class yazi-float yazi
+#bindsym $rmod+f exec sh -c 'echo "$EDITOR" > /tmp/editor.txt'
 
 # -------------------------------------------------------------------
 # Notes
