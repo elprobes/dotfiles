@@ -12,7 +12,7 @@ COLOR_HDMI="#ff7f50"
 
 truncate() {
     local text="$1"
-    local max=14
+    local max=40
 
     if ((${#text} > max)); then
         printf "%s…" "${text:0:max-1}"
