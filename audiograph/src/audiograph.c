@@ -1,3 +1,10 @@
+/*
+ * audiograph
+ *
+ * 12 bande LEFT + 12 bande RIGHT
+ * Output CAVA stereo per Polybar
+ */
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

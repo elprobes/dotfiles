@@ -1,0 +1,15 @@
+[Unit]
+Description=CAVA for Polybar
+
+[Service]
+ExecStartPre=/usr/bin/mkdir -p /tmp/audiograph
+ExecStartPre=/usr/bin/rm -f /tmp/audiograph/cava_fifo
+ExecStartPre=/usr/bin/mkfifo /tmp/audiograph/cava_fifo
+
+ExecStart=/usr/bin/cava -p %h/.config/cava/polybar.conf
+
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
