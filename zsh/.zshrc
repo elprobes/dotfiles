@@ -10,6 +10,17 @@ alias grep='grep --color=auto'
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 
+# Home / End
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
+
+# Delete
+bindkey '^[[3~' delete-char
+
+# Page Up / Page Down
+bindkey '^[[5~' beginning-of-history
+bindkey '^[[6~' end-of-history
+
 # Colore username diverso per root
 if [[ $EUID -eq 0 ]]; then
     USER_COLOR='%F{196}'
