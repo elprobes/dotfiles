@@ -111,7 +111,8 @@ smart_borders on
 # -------------------------------------------------------------------
 
 # Modifier remap
-exec --no-startup-id xmodmap ~/.Xmodmap
+#exec --no-startup-id xmodmap ~/.Xmodmap
+exec_always --no-startup-id sh -c "sleep 3 && xmodmap ~/.Xmodmap"
 
 # XDG autostart
 exec --no-startup-id dex --autostart --environment i3

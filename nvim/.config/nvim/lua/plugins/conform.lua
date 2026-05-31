@@ -16,6 +16,7 @@ return {
 			vue = { "prettier" },
 
 			html = { "prettier" },
+			xhtml = { "prettier" },
 			css = { "prettier" },
 
 			json = { "prettier" },
