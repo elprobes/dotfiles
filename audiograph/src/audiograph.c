@@ -18,8 +18,10 @@ const char *bars[] = {"▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"};
 const char *colors[] = {"#565f89", "#6676a8", "#7289c7", "#7aa2f7",
                         "#89b4fa", "#a6c1ff", "#c0caf5", "#dbe3ff"};
 
-int main(void) {
-  FILE *fifo = fopen("/tmp/audiograph/cava_fifo", "r");
+int main(int argc, char **argv) {
+  const char *fifo_path = (argc > 1) ? argv[1] : "/tmp/audiograph/cava_fifo";
+
+  FILE *fifo = fopen(fifo_path, "r");
 
   if (!fifo) {
     perror("fopen");

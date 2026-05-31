@@ -1,10 +1,12 @@
 [Unit]
 Description=CAVA for Polybar
+After=pipewire.service wireplumber.service
+Wants=pipewire.service wireplumber.service
 
 [Service]
 ExecStartPre=/usr/bin/mkdir -p /tmp/audiograph
-ExecStartPre=/usr/bin/rm -f /tmp/audiograph/cava_fifo
-ExecStartPre=/usr/bin/mkfifo /tmp/audiograph/cava_fifo
+ExecStartPre=/usr/bin/bash -c 'test -p /tmp/audiograph/cava_fifo || mkfifo /tmp/audiograph/cava_fifo'
+ExecStartPre=/usr/bin/bash -c 'until pactl info >/dev/null 2>&1; do sleep 1; done'
 
 ExecStart=/usr/bin/cava -p %h/.config/cava/polybar.conf
 

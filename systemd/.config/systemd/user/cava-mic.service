@@ -1,0 +1,17 @@
+[Unit]
+Description=CAVA microphone visualizer
+After=pipewire.service wireplumber.service
+Wants=pipewire.service wireplumber.service
+
+[Service]
+ExecStartPre=/usr/bin/mkdir -p /tmp/audiograph
+ExecStartPre=/usr/bin/bash -c 'test -p /tmp/audiograph/cava_mic_fifo || mkfifo /tmp/audiograph/cava_mic_fifo'
+ExecStartPre=/usr/bin/bash -c 'until pactl list short sources | grep -q "HyperX_SoloCast"; do sleep 1; done'
+
+ExecStart=/usr/bin/cava -p %h/.config/cava/microphone.conf
+
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.targetantedBy=default.target
