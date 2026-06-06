@@ -48,11 +48,11 @@ bind index,pager W what-key
 
 color status black green
 
-color indicator default default
+color indicator blue default
 
 color sidebar_new yellow default
-color sidebar_indicator black yellow
-color sidebar_highlight white default
+color sidebar_indicator black blue
+color sidebar_highlight blue default
 
 color index yellow default "~N"
 

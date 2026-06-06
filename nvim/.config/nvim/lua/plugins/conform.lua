@@ -1,34 +1,29 @@
 return {
-	"stevearc/conform.nvim",
-	opts = {
-		formatters_by_ft = {
-			lua = { "stylua" },
+    {
+        "stevearc/conform.nvim",
 
-			sh = { "shfmt" },
-			bash = { "shfmt" },
+        config = function()
+            require("conform").setup({
+                formatters_by_ft = {
+                    lua = { "stylua" },
 
-			c = { "clang_format" },
-			cpp = { "clang_format" },
+                    javascript = { "prettier" },
+                    javascriptreact = { "prettier" },
 
-			javascript = { "prettier" },
-			typescript = { "prettier" },
+                    typescript = { "prettier" },
+                    typescriptreact = { "prettier" },
 
-			vue = { "prettier" },
+                    html = { "prettier" },
+                    css = { "prettier" },
 
-			html = { "prettier" },
-			xhtml = { "prettier" },
-			css = { "prettier" },
+                    json = { "prettier" },
+                    yaml = { "prettier" },
 
-			json = { "prettier" },
+                    markdown = { "prettier" },
 
-			yaml = { "prettier" },
-
-			markdown = { "prettier" },
-		},
-
-		--format_on_save = {
-		--	timeout_ms = 500,
-		--	lsp_fallback = true,
-		--},
-	},
+                    bash = { "shfmt" },
+                },
+            })
+        end,
+    },
 }

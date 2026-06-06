@@ -6,25 +6,16 @@ return {
             "nvim-tree/nvim-web-devicons",
         },
 
-        opts = {
-            fzf_opts = {
-                ["--exact"] = "",
-            },
-
-            files = {
-                hidden = true,
-
-                fd_opts = [[
-                    --type f
-                    --hidden
-                    --follow
-                    --exclude .git
-                    --exclude node_modules
-                    --exclude dist
-                    --exclude target
-                    --exclude .cache
-                ]],
-            },
-        },
+        config = function()
+            require("fzf-lua").setup({
+                winopts = {
+                    height = 0.85,
+                    width = 0.80,
+                    preview = {
+                        layout = "vertical",
+                    },
+                },
+            })
+        end,
     },
 }

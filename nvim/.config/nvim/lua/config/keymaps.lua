@@ -161,60 +161,36 @@ vim.keymap.set("n", "<leader>tt", "<cmd>terminal<CR>", {
 
 -- =========================================================
 -- FZF-LUA
--- ========================================================
+-- =========================================================
 
 vim.keymap.set("n", "<leader>ff", function()
-	require("fzf-lua").files({
-		cmd = table.concat({
-			"fd",
-			"--type",
-			"f",
-			"--hidden",
-			"--exclude",
-			".git",
-			"--exclude",
-			"node_modules",
-			"--exclude",
-			".cache",
-			"--exclude",
-			"dist",
-			"--exclude",
-			"target",
-			".",
-		}, " "),
-	})
+    require("fzf-lua").files()
 end, {
-	desc = "Find files",
+    desc = "Find files",
 })
 
 vim.keymap.set("n", "<leader>fg", function()
-	require("fzf-lua").live_grep()
+    require("fzf-lua").live_grep()
 end, {
-	desc = "Live grep",
+    desc = "Live grep",
 })
 
 vim.keymap.set("n", "<leader>fr", function()
-	require("fzf-lua").oldfiles()
+    require("fzf-lua").oldfiles()
 end, {
-	desc = "Recent files",
+    desc = "Recent files",
 })
 
 vim.keymap.set("n", "<leader>fb", function()
-	require("fzf-lua").buffers()
+    require("fzf-lua").buffers()
 end, {
-	desc = "Buffers",
+    desc = "Find buffers",
 })
 
 vim.keymap.set("n", "<leader>fh", function()
-	require("fzf-lua").help_tags()
+    require("fzf-lua").help_tags()
 end, {
-	desc = "Help tags",
-})
-
-vim.keymap.set("n", "<leader>cd", function()
-	require("fzf-lua").diagnostics_document()
-end, {
-	desc = "Diagnostics",
+    desc = "Help tags",
 })
 
 -- =========================================================
@@ -250,13 +226,13 @@ vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, {
 })
 
 vim.keymap.set("n", "<leader>cf", function()
-	require("conform").format({
-		lsp_fallback = true,
-		async = false,
-		timeout_ms = 500,
-	})
+    require("conform").format({
+        lsp_fallback = true,
+        async = false,
+        timeout_ms = 500,
+    })
 end, {
-	desc = "Format file",
+    desc = "Format file",
 })
 
 -- =========================================================
@@ -324,7 +300,15 @@ vim.keymap.set("n", "Q", "<nop>")
 -- =========================================================
 -- NEO-TREE
 -- =========================================================
-
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", {
-	desc = "Toggle file explorer",
+    desc = "Toggle file explorer",
+})
+
+-- =========================================================
+-- WHICH-KEY
+-- =========================================================
+vim.keymap.set("n", "<leader>?", function()
+    require("which-key").show({ global = false })
+end, {
+    desc = "Buffer local keymaps",
 })
