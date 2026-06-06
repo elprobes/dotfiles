@@ -1,9 +1,5 @@
-require("config.keymaps")
-
-require("config.lazy")
-
 require("config.options")
+require("config.keymaps")
+require("config.autocmds")
 
-require("config.ui")
-
-require("config.diagnostics")
+require("lazy-bootstrap")
