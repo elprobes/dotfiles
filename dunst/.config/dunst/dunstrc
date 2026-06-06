@@ -14,7 +14,7 @@ offset = (8, 40)
 origin = top-right
 
 width = 360
-height = (0, 140)
+height = (0, 300)
 
 gap_size = 8
 
@@ -87,3 +87,20 @@ max_icon_size = 56
 format = "<span size='large'><b> %s</b></span>\n%b"
 
 timeout = 6
+
+[mail]
+appname = Mail
+
+background = "#1a1b26"
+foreground = "#c0caf5"
+
+frame_color = "#e0af68"
+
+timeout = 0
+
+icon_position = left
+
+min_icon_size = 56
+max_icon_size = 56
+
+format = "<span size='large'><b> %s</b></span>\n%b"

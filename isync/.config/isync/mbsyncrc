@@ -1,0 +1,22 @@
+IMAPAccount gmail
+Host imap.gmail.com
+User elprobes@gmail.com
+PassCmd "cat ~/.config/secrets/gmail.pass"
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+SubFolders Verbatim
+Path ~/.mail/gmail/
+Inbox ~/.mail/gmail/INBOX
+
+Channel gmail
+Far :gmail-remote:
+Near :gmail-local:
+Patterns * ![Gmail]/All Mail ![Gmail]/Important ![Gmail]/Starred
+Create Near
+Expunge Both
+SyncState *

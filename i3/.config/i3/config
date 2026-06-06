@@ -81,6 +81,8 @@ for_window [class="yazi-float"] floating enable
 for_window [class="yazi-float"] move position 150 55 
 for_window [class="yazi-float"] resize set 1600 950
 
+#for_window [class="KeePassXC"] move scratchpad
+
 # -------------------------------------------------------------------
 # Borders & Gaps
 # -------------------------------------------------------------------
@@ -259,6 +261,20 @@ bindsym $mod+Shift+i exec --no-startup-id ~/.local/bin/toggle-idle
 
 bindsym $rmod+f exec kitty --class yazi-float yazi
 #bindsym $rmod+f exec sh -c 'echo "$EDITOR" > /tmp/editor.txt'
+
+
+# -------------------------------------------------------------------
+# Toggle video surveillance
+# -------------------------------------------------------------------
+
+bindsym $rmod+v exec ~/.local/bin/rofi/toggle-motion
+
+# -------------------------------------------------------------------
+# KeePassXC
+# -------------------------------------------------------------------
+
+bindsym $mod+minus scratchpad show
+bindsym $mod+Shift+minus move scratchpad
 
 # -------------------------------------------------------------------
 # Notes

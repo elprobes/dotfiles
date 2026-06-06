@@ -1,0 +1,63 @@
+set folder="~/.mail/gmail"
+set spoolfile="+INBOX"
+set mbox_type=Maildir
+set sort = threads
+set sort_aux = reverse-last-date-received
+set trash = "+[Gmail]/Cestino"
+
+set arrow_cursor=yes
+set arrow_string="❯ "
+
+mailboxes \
+  +INBOX \
+  +Famiglia \
+  +Credem \
+  +Fastweb \
+  +Me \
+  +Proxima \
+  +Register \
+  +"[Gmail]/Tutti i messaggi" \
+  +"[Gmail]/Posta inviata" \
+  +"[Gmail]/Bozze" \
+  +"[Gmail]/Importanti" \
+  +"[Gmail]/Spam" \
+  +"[Gmail]/Cestino"
+
+virtual-mailboxes \
+  "Inbox" "notmuch://?query=tag:inbox" \
+  "Unread" "notmuch://?query=tag:unread" \
+  "Attachments" "notmuch://?query=tag:attachment"
+
+bind index,pager / vfolder-from-query
+bind index,pager X change-vfolder
+bind index,pager + entire-thread
+
+# Sidebar
+set sidebar_visible = yes
+set sidebar_width = 30
+set sidebar_short_path = yes
+set sidebar_next_new_wrap = yes
+set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
+
+bind index,pager <Esc>n sidebar-next
+bind index,pager <Esc>p sidebar-prev
+bind index,pager <Esc>o sidebar-open
+bind index,pager S check-stats
+
+bind index,pager W what-key
+
+color status black green
+
+color indicator default default
+
+color sidebar_new yellow default
+color sidebar_indicator black yellow
+color sidebar_highlight white default
+
+color index yellow default "~N"
+
+color quoted green default
+color quoted2 cyan default
+color quoted3 magenta default
+
+color error red default

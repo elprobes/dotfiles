@@ -160,37 +160,62 @@ vim.keymap.set("n", "<leader>tt", "<cmd>terminal<CR>", {
 })
 
 -- =========================================================
--- TELESCOPE
--- =========================================================
+-- FZF-LUA
+-- ========================================================
 
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", {
+vim.keymap.set("n", "<leader>ff", function()
+	require("fzf-lua").files({
+		cmd = table.concat({
+			"fd",
+			"--type",
+			"f",
+			"--hidden",
+			"--exclude",
+			".git",
+			"--exclude",
+			"node_modules",
+			"--exclude",
+			".cache",
+			"--exclude",
+			"dist",
+			"--exclude",
+			"target",
+			".",
+		}, " "),
+	})
+end, {
 	desc = "Find files",
 })
 
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", {
+vim.keymap.set("n", "<leader>fg", function()
+	require("fzf-lua").live_grep()
+end, {
 	desc = "Live grep",
 })
 
-vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", {
+vim.keymap.set("n", "<leader>fr", function()
+	require("fzf-lua").oldfiles()
+end, {
 	desc = "Recent files",
 })
 
-vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", {
-	desc = "Find buffers",
+vim.keymap.set("n", "<leader>fb", function()
+	require("fzf-lua").buffers()
+end, {
+	desc = "Buffers",
 })
 
-vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", {
+vim.keymap.set("n", "<leader>fh", function()
+	require("fzf-lua").help_tags()
+end, {
 	desc = "Help tags",
 })
 
-vim.keymap.set(
-	"n",
-	"<leader>cd",
-	"<cmd>Telescope diagnostics<CR>",
-	{
-		desc = "Diagnostics",
-	}
-)
+vim.keymap.set("n", "<leader>cd", function()
+	require("fzf-lua").diagnostics_document()
+end, {
+	desc = "Diagnostics",
+})
 
 -- =========================================================
 -- LSP

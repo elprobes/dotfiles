@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if pgrep -x motion >/dev/null; then
+    status="󰞏 On -"
+    options="Disattiva Sorveglianza"
+else
+    status="󱜞 Off -"
+    options="Attiva Sorveglianza"
+fi
+
+choice=$(printf '%s\n' "$options" | rofi -dmenu -p "$status")
+
+case "$choice" in
+    "Attiva Sorveglianza")
+        tmux new-session -d -s motion \
+            'motion -c /home/brotech/motion.conf -n'
+
+        notify-send -u normal "󰕧 Sorveglianza attivata"
+        ;;
+
+    "Disattiva Sorveglianza")
+        pkill -x motion
+        notify-send -u low "󰕨 Sorveglianza disattivata"
+        ;;
+esac

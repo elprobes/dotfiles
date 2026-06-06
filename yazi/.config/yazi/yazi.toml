@@ -1,2 +1,16 @@
 [mgr]
-ratio = [1, 4, 5]
+ratio = [1, 3, 6]
+
+[[plugin.prepend_previewers]]
+url = "*.md"
+run = 'piper -- bat --color=always --theme="Catppuccin Mocha" "$1"'
+
+[opener]
+vlc = [
+    { run = 'vlc "$@"', orphan = true }
+]
+
+[open]
+prepend_rules = [
+    { mime = "video/*", use = "vlc" },
+]
