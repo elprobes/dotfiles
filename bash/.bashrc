@@ -19,10 +19,10 @@ fi
 
 PS1='[\[\e[38;5;39m\]\D{%d-%m-%Y}\[\e[0m\] \[\e[38;5;111m\]\t\[\e[0m\]] '"$USER_COLOR"'\u\[\e[0m\]@\[\e[38;5;251;2m\]\H\[\e[0m\] \[\e[38;5;194;3m\]\w\n\[\e[0;38;5;157m\]'"$SYMBOL"'\[\e[0m\]: '
 
-#export EDITOR="nvim"
-#export VISUAL="nvim"
+export EDITOR="nvim"
+export VISUAL="nvim"
 # For sudo users
-#export SUDO_EDITOR="nvim"
+export SUDO_EDITOR="nvim"
 
 ta () {
     if [ -z "$1" ]; then
@@ -32,6 +32,8 @@ ta () {
     fi
 }
 
+alias m='~/.local/bin/mail-sync >/dev/null 2>&1 && neomutt'
+
 HISTFILE="$HOME/.history"
 
 HISTSIZE=10000
@@ -39,4 +41,4 @@ HISTFILESIZE=10000
 
 shopt -s histappend
 
-PROMPT_COMMAND='history -a; history -n'
+PROMPT_COMMAND="history -a; history -c; history -r"
