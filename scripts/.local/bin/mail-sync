@@ -29,146 +29,142 @@ mapfile -t IDS < <(
         --sort=newest-first \
         --output=messages \
         '*'
-    )
+)
 
-    [[ ${#IDS[@]} -eq 0 ]] && exit 0
+[[ ${#IDS[@]} -eq 0 ]] && exit 0
 
-        LATEST="${IDS[0]}"
+LATEST="${IDS[0]}"
 
-        if [[ ! -f "$STATE_FILE" ]]; then
-            echo "$LATEST" >"$STATE_FILE"
-            exit 0
-        fi
+if [[ ! -f "$STATE_FILE" ]]; then
+    echo "$LATEST" >"$STATE_FILE"
+    exit 0
+fi
 
-        LAST=$(<"$STATE_FILE")
+LAST=$(<"$STATE_FILE")
 
-        NEW_IDS=()
+NEW_IDS=()
 
-        for id in "${IDS[@]}"; do
-            [[ "$id" == "$LAST" ]] && break
-            NEW_IDS+=("$id")
-        done
+for id in "${IDS[@]}"; do
+    [[ "$id" == "$LAST" ]] && break
+    NEW_IDS+=("$id")
+done
 
-        [[ ${#NEW_IDS[@]} -eq 0 ]] && exit 0
+[[ ${#NEW_IDS[@]} -eq 0 ]] && exit 0
 
-            UNREAD_COUNT=$(notmuch count tag:unread)
+UNREAD_COUNT=$(notmuch count tag:unread)
 
-            COUNT=${#NEW_IDS[@]}
+COUNT=${#NEW_IDS[@]}
 
-                if [[ "$COUNT" -eq 1 ]]; then
+if [[ "$COUNT" -eq 1 ]]; then
 
-                    JSON=$(notmuch show \
-                        --format=json \
-                        --entire-thread=false \
-                        "${NEW_IDS[0]}")
+    JSON=$(notmuch show \
+        --format=json \
+        --entire-thread=false \
+        "${NEW_IDS[0]}")
 
-                    FROM=$(jq -r '.[0][0][0].headers.From' <<<"$JSON")
-                    FROM=$(printf '%s\n' "$FROM" | sed -E 's/^(.*) <[^>]+>$/\1/')
+    FROM=$(jq -r '.[0][0][0].headers.From' <<<"$JSON")
+    FROM=$(printf '%s\n' "$FROM" | sed -E 's/^(.*) <[^>]+>$/\1/')
 
-                    SUBJECT=$(jq -r '.[0][0][0].headers.Subject' <<<"$JSON")
+    SUBJECT=$(jq -r '.[0][0][0].headers.Subject' <<<"$JSON")
 
-                    FROM=$(printf '%s' "$FROM" | escape_markup)
-                    SUBJECT=$(printf '%s' "$SUBJECT" | escape_markup)
+    FROM=$(printf '%s' "$FROM" | escape_markup)
+    SUBJECT=$(printf '%s' "$SUBJECT" | escape_markup)
 
-                    PREFIX="$ICON_MAIL"
+    PREFIX="$ICON_MAIL"
 
-                    HAS_ATTACHMENT=$(
-                        jq -r '
+    HAS_ATTACHMENT=$(
+        jq -r '
                         .[0][0][0].tags
                         | index("attachment")
                         | if . == null then "no" else "yes" end
                         ' <<<"$JSON"
-                    )
+    )
 
-                    if [[ "$HAS_ATTACHMENT" == "yes" ]]; then
-                        PREFIX="$ICON_ATTACHMENT"
-                    fi
+    if [[ "$HAS_ATTACHMENT" == "yes" ]]; then
+        PREFIX="$ICON_ATTACHMENT"
+    fi
 
-                    OTP=$(grep -oE '\b[0-9]{6,8}\b' <<<"$SUBJECT" | head -1 || true)
+    OTP=$(grep -oE '\b[0-9]{6,8}\b' <<<"$SUBJECT" | head -1 || true)
 
-                    if [[ -n "$OTP" ]]; then
-                        PREFIX=$ICON_MAIL
+    if [[ -n "$OTP" ]]; then
 
-                        notify-send \
-                            -a "Mail" \
-                            -u critical \
-                            "$FROM" \
-                            "   $ICON_INDENT $OTP"$'\n'"$ICON_UNREAD Non letti: $UNREAD_COUNT"
+        notify-send \
+            -a "Mail" \
+            "$FROM" \
+            "   $ICON_INDENT $OTP"$'\n'"$ICON_UNREAD Non letti: $UNREAD_COUNT"
 
-                    else
+    else
 
-                        notify-send \
-                            -a "Mail" \
-                            -u critical \
-                            "$FROM" \
-                            "   $ICON_INDENT $SUBJECT"$'\n'"$ICON_UNREAD Non letti: $UNREAD_COUNT"
-                    fi
+        notify-send \
+            -a "Mail" \
+            "$FROM" \
+            "   $ICON_INDENT $SUBJECT"$'\n'"$ICON_UNREAD Non letti: $UNREAD_COUNT"
+    fi
 
-                else
+else
 
-                    BODY=""
+    BODY=""
 
-                    MAX=3
-                    SHOWN=0
+    MAX=3
+    SHOWN=0
 
-                    for id in "${NEW_IDS[@]}"; do
+    for id in "${NEW_IDS[@]}"; do
 
-                        [[ "$SHOWN" -ge "$MAX" ]] && break
+        [[ "$SHOWN" -ge "$MAX" ]] && break
 
-                        JSON=$(notmuch show \
-                            --format=json \
-                            --entire-thread=false \
-                            "$id")
+        JSON=$(notmuch show \
+            --format=json \
+            --entire-thread=false \
+            "$id")
 
-                        FROM=$(jq -r '.[0][0][0].headers.From' <<<"$JSON")
-                        FROM=$(printf '%s\n' "$FROM" | sed -E 's/^(.*) <[^>]+>$/\1/')
+        FROM=$(jq -r '.[0][0][0].headers.From' <<<"$JSON")
+        FROM=$(printf '%s\n' "$FROM" | sed -E 's/^(.*) <[^>]+>$/\1/')
 
-                        SUBJECT=$(jq -r '.[0][0][0].headers.Subject' <<<"$JSON")
+        SUBJECT=$(jq -r '.[0][0][0].headers.Subject' <<<"$JSON")
 
-                        FROM=$(printf '%s' "$FROM" | escape_markup)
-                        SUBJECT=$(printf '%s' "$SUBJECT" | escape_markup)
+        FROM=$(printf '%s' "$FROM" | escape_markup)
+        SUBJECT=$(printf '%s' "$SUBJECT" | escape_markup)
 
-                        ICON="$ICON_MULTIPLE"
+        ICON="$ICON_MULTIPLE"
 
-                        HAS_ATTACHMENT=$(
-                            jq -r '
+        HAS_ATTACHMENT=$(
+            jq -r '
                             .[0][0][0].tags
                             | index("attachment")
                             | if . == null then "no" else "yes" end
                             ' <<<"$JSON"
-                        )
+        )
 
-                        if [[ "$HAS_ATTACHMENT" == "yes" ]]; then
-                            ICON="$ICON_ATTACHMENT"
-                        fi
+        if [[ "$HAS_ATTACHMENT" == "yes" ]]; then
+            ICON="$ICON_ATTACHMENT"
+        fi
 
-                        OTP=$(grep -oE '\b[0-9]{6,8}\b' <<<"$SUBJECT" | head -1 || true)
+        OTP=$(grep -oE '\b[0-9]{6,8}\b' <<<"$SUBJECT" | head -1 || true)
 
-                        if [[ -n "$OTP" ]]; then
-                            ICON="$ICON_OTP"
-                            SUBJECT="Codice: $OTP"
-                        fi
+        if [[ -n "$OTP" ]]; then
+            ICON="$ICON_OTP"
+            SUBJECT="Codice: $OTP"
+        fi
 
-                        BODY+="$ICON $FROM"$'\n'
-                        BODY+="   $ICON_INDENT $SUBJECT"$'\n\n'
+        BODY+="$ICON $FROM"$'\n'
+        BODY+="   $ICON_INDENT $SUBJECT"$'\n\n'
 
-                        ((SHOWN += 1))
+        ((SHOWN += 1))
 
-                    done
+    done
 
-                    if [[ "$COUNT" -gt "$MAX" ]]; then
-                        #        BODY+=$'\n'
-                        BODY+="... e altre $((COUNT - MAX))"
-                    fi
+    if [[ "$COUNT" -gt "$MAX" ]]; then
+        #        BODY+=$'\n'
+        BODY+="... e altre $((COUNT - MAX))"
+    fi
 
-                    BODY+=$'\n\n'
-                    BODY+="$ICON_UNREAD Non letti: $UNREAD_COUNT"
+    BODY+=$'\n\n'
+    BODY+="$ICON_UNREAD Non letti: $UNREAD_COUNT"
 
-                    notify-send \
-                        -a "Mail" \
-                        -u critical \
-                        " $COUNT nuove email" \
-                        $'\n'"$BODY"
-                fi
+    notify-send \
+        -a "Mail" \
+        " $COUNT nuove email" \
+        $'\n'"$BODY"
+fi
 
-                echo "$LATEST" >"$STATE_FILE"
+echo "$LATEST" >"$STATE_FILE"

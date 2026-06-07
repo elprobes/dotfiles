@@ -22,6 +22,7 @@ return {
                     markdown = { "prettier" },
 
                     bash = { "shfmt" },
+                    sh = { "shfmt" },
                 },
             })
         end,
