@@ -49,7 +49,12 @@ for id in "${IDS[@]}"; do
     NEW_IDS+=("$id")
 done
 
-[[ ${#NEW_IDS[@]} -eq 0 ]] && exit 0
+if [[ ${#NEW_IDS[@]} -eq 0 ]]; then
+    notify-send \
+        -u low \
+        "󰄬 Sincronizzazione completata"
+    exit 0
+fi
 
 UNREAD_COUNT=$(notmuch count tag:unread)
 

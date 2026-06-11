@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+neomutt
+
+systemd-run --user --quiet ~/.local/bin/mail-sync

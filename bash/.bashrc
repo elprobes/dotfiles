@@ -32,6 +32,7 @@ ta () {
     fi
 }
 
+alias pall='git push origin main && git push github main'
 alias m='~/.local/bin/mail-sync >/dev/null 2>&1 && neomutt'
 
 HISTFILE="$HOME/.history"

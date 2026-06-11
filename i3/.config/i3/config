@@ -81,6 +81,10 @@ for_window [class="yazi-float"] floating enable
 for_window [class="yazi-float"] move position 150 55
 for_window [class="yazi-float"] resize set 1600 950
 
+for_window [instance="neomutt-floating"] floating enable
+for_window [instance="neomutt-floating"] move position 150 55
+for_window [instance="neomutt-floating"] resize set 1600 950
+
 #for_window [class="KeePassXC"] move scratchpad
 
 # -------------------------------------------------------------------
@@ -147,6 +151,11 @@ exec --no-startup-id Telegram
 # Lockscreen
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
+
+# -------------------------------------------------------------------
+# Combinazione per rimappare Super_R a mod3
+# -------------------------------------------------------------------
+bindsym $mod+Shift+x exec --no-startup-id sh -c 'xmodmap ~/.Xmodmap && notify-send "Xmodmap" "Mod3 ripristinato"'
 
 # -------------------------------------------------------------------
 # Audio
@@ -266,7 +275,8 @@ bindsym $rmod+f exec kitty --class yazi-float yazi
 # Neomutt email client
 # -------------------------------------------------------------------
 
-bindsym $rmod+m exec --no-startup-id ~/.local/bin/mail-sync || notify-send "Errore sincronizzazione"
+bindsym $rmod+Shift+m exec --no-startup-id ~/.local/bin/mail-sync || notify-send "Errore sincronizzazione"
+bindsym $rmod+m exec kitty --class neomutt-floating -e ~/.local/bin/neomutt-floating
 
 # -------------------------------------------------------------------
 # Toggle video surveillance
