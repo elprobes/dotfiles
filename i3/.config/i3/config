@@ -85,6 +85,8 @@ for_window [instance="neomutt-floating"] floating enable
 for_window [instance="neomutt-floating"] move position 150 55
 for_window [instance="neomutt-floating"] resize set 1600 950
 
+for_window [class="Yad"] floating enable
+
 #for_window [class="KeePassXC"] move scratchpad
 
 # -------------------------------------------------------------------
