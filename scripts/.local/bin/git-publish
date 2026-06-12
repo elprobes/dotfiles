@@ -10,6 +10,35 @@ YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+colorize_log() {
+    awk '
+    /\[OK\]/ {
+        print "\033[32m" $0 "\033[0m"
+        next
+    }
+
+    /\[ERROR\]/ {
+        print "\033[31m" $0 "\033[0m"
+        next
+    }
+
+    /\[WARN\]/ {
+        print "\033[33m" $0 "\033[0m"
+        next
+    }
+
+    /\[INFO\]/ {
+        print "\033[36m" $0 "\033[0m"
+        next
+    }
+
+    {
+        print
+    }
+    ' "$LOGFILE" | sed -E \
+    's/(Utente: )([[:alnum:]_.-]+)/\1\x1b[35m\2\x1b[0m/g'
+}
+
 log_raw() {
     local level="$1"
     local msg="$2"
@@ -53,6 +82,41 @@ log_error() {
     error "$*"
 }
 
+show_log() {
+
+    if [[ ! -f "$LOGFILE" ]]; then
+        warn "Nessun file di log trovato."
+        exit 0
+    fi
+
+    if command -v fzf >/dev/null 2>&1; then
+
+        colorize_log | fzf --ansi --tac
+
+    elif command -v bat >/dev/null 2>&1; then
+
+        colorize_log | bat --paging=always --language=log
+
+    elif command -v less >/dev/null 2>&1; then
+
+        colorize_log | less -R
+
+    else
+
+        colorize_log
+
+    fi
+}
+
+case "${1:-}" in
+
+    logs)
+        show_log
+        exit 0
+        ;;
+
+esac
+
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     log_error "Questa directory non appartiene a una repository Git."
     exit 1
@@ -88,6 +152,8 @@ echo "󰋼 Utente     : $user"
 echo "󰞇 Host       : $host"
 echo "------------------------------------"
 
+log_raw "" "----------"
+log_raw "INFO" "Starting..."
 log_raw "INFO" "Repository: $repo_name"
 log_raw "INFO" "Branch: $branch"
 log_raw "INFO" "Utente: $user"
