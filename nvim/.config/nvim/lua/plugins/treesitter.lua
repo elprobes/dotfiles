@@ -20,6 +20,7 @@ return {
                     "dockerfile",
                     "sql",
                     "markdown",
+                    "markdown_inline"
                 },
 
                 highlight = {
