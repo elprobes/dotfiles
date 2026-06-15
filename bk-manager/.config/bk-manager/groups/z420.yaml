@@ -10,43 +10,23 @@ schedule:
 
 jobs:
 
-  - id: android
+  - id: Proxima
 
     enabled: true
 
-    source: /home/brotech/AndroidStudioProjects
+    source: /home/brotech/Proxima
 
-    destination: sans1@192.168.1.10:/data/roberto/proxima/backups/AndroidStudioProjects
-
-    retention: 30
-
-  - id: php-projects
-
-    enabled: true
-
-    source: /home/brotech/PHP-Projects
-
-    destination: sans1@192.168.1.10:/data/roberto/proxima/backups/PHP-Projects
+    destination: sans1@192.168.1.10:/backups/roberto/Proxima
 
     retention: 30
 
-  - id: web-projects-proxima
-
-    enabled: true
-
-    source: /home/brotech/web-projects/proxima
-
-    destination: sans1@192.168.1.10:/data/roberto/proxima/backups/web-projects
-
-    retention: 30
-
-  - id: web-projects-all
+  - id: web-projects
 
     enabled: true
 
     source: /home/brotech/web-projects
 
-    destination: sans1@192.168.1.10:/data/roberto/backups/web-projects
+    destination: sans1@192.168.1.10:/backups/roberto/web-projects
 
     retention: 30
 
@@ -56,6 +36,6 @@ jobs:
 
     source: /home/brotech/Projects
 
-    destination: sans1@192.168.1.10:/data/roberto/backups/Projects
+    destination: sans1@192.168.1.10:/backups/roberto/Projects
 
     retention: 30
