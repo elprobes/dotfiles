@@ -1,0 +1,61 @@
+id: z420
+
+enabled: true
+
+description: Backup to z420
+
+schedule:
+  type: daily
+  time: "02:00"
+
+jobs:
+
+  - id: android
+
+    enabled: true
+
+    source: /home/brotech/AndroidStudioProjects
+
+    destination: sans1@192.168.1.10:/data/roberto/proxima/backups/AndroidStudioProjects
+
+    retention: 30
+
+  - id: php-projects
+
+    enabled: true
+
+    source: /home/brotech/PHP-Projects
+
+    destination: sans1@192.168.1.10:/data/roberto/proxima/backups/PHP-Projects
+
+    retention: 30
+
+  - id: web-projects-proxima
+
+    enabled: true
+
+    source: /home/brotech/web-projects/proxima
+
+    destination: sans1@192.168.1.10:/data/roberto/proxima/backups/web-projects
+
+    retention: 30
+
+  - id: web-projects-all
+
+    enabled: true
+
+    source: /home/brotech/web-projects
+
+    destination: sans1@192.168.1.10:/data/roberto/backups/web-projects
+
+    retention: 30
+
+  - id: projects
+
+    enabled: true
+
+    source: /home/brotech/Projects
+
+    destination: sans1@192.168.1.10:/data/roberto/backups/Projects
+
+    retention: 30
