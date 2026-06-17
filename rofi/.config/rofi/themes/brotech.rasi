@@ -23,7 +23,7 @@
     alternate-normal-foreground: @foreground;
     normal-background:           rgba ( 0, 0, 0, 95 % );
     lightfg:                     rgba ( 88, 104, 117, 100 % );
-    selected-normal-background:  rgba ( 17, 17, 17, 100 % );
+    selected-normal-background:  rgba ( 40, 40, 40, 100 % );
     border-color:                @foreground;
     spacing:                     2;
     separatorcolor:              rgba ( 30, 37, 41, 100 % );
@@ -37,7 +37,7 @@
 }
 window {
     background-color: @background;
-    border:           0;
+    border:           0px;
     padding:          0;
     border-radius:    0px;
 }
@@ -58,13 +58,17 @@ listview {
     fixed-height: 0;
     border:       0px ;
     border-color: @separatorcolor;
-    spacing:      2px ;
+    spacing:      4px ;
     scrollbar:    true;
     padding:      0px 0px ;
 }
 element {
     border:  0;
-    padding: 4px 7px ;
+    padding: 6px 8px ;
+}
+element-icon {
+    size: 22px;
+    margin: 0px 10px 0px 0px;
 }
 element-text {
     background-color: inherit;
@@ -136,13 +140,13 @@ entry {
     spacing:    0;
     text-color: @normal-foreground;
     background-color: @background;
-    padding:	3px 3px 3px 7px;
+    padding:	6px 6px 6px 10px;
     border-radius: 0 ;
 }
 prompt {
     spacing:    0;
     text-color: #ffffff;
-    padding:	3px 3px 3px 7px;
+    padding:	6px 6px 6px 10px;
     border-radius: 0px 0px 0px 0px;
 }
 inputbar {
@@ -151,6 +155,7 @@ inputbar {
 textbox-prompt-colon {
     expand:     false;
     str:        ":";
-    margin:     3px 0.3em 0em 0em ;
+    margin:     6px 0.3em 0em 0em ;
     text-color: #ffffff;
 }
+
