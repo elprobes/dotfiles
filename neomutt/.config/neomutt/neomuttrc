@@ -8,6 +8,12 @@ set trash = "+[Gmail]/Cestino"
 set arrow_cursor=yes
 set arrow_string="❯ "
 
+set sendmail="/usr/bin/msmtp"
+set use_from=yes
+set from="elprobes@gmail.com"
+set realname="Roberto Sansone"
+set envelope_from=yes
+
 mailboxes \
   +INBOX \
   +Famiglia \

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+selected=$(
+    i3-msg -t get_tree |
+    jq -r '
+        recurse(.nodes[]?, .floating_nodes[]?)
+        | select(.scratchpad_state != "none")
+        | "\(.id)|\(.nodes[0].window_properties.class // "Unknown") - \(.nodes[0].name)"
+    ' |
+    rofi -dmenu -i -p "Scratchpad"
+)
+
+[ -z "$selected" ] && exit
+
+id="${selected%%|*}"
+
+i3-msg "[con_id=$id] focus; scratchpad show"
