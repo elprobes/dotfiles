@@ -1,17 +1,68 @@
 #!/bin/bash
 
-selected=$(
+MRU_FILE="$HOME/.cache/i3-scratchpad-mru"
+
+mkdir -p "$(dirname "$MRU_FILE")"
+touch "$MRU_FILE"
+
+entries=$(
     i3-msg -t get_tree |
     jq -r '
         recurse(.nodes[]?, .floating_nodes[]?)
         | select(.scratchpad_state != "none")
-        | "\(.id)|\(.nodes[0].window_properties.class // "Unknown") - \(.nodes[0].name)"
-    ' |
+        | .nodes[0]
+        | [
+            (.window_properties.class // "Unknown"),
+            .name,
+            (.id | tostring)
+          ]
+        | @tsv
+    '
+)
+
+ordered=$(
+    {
+        while IFS= read -r key; do
+            awk -F'\t' -v k="$key" '
+                ($1 "|" $2) == k
+            ' <<< "$entries"
+        done < "$MRU_FILE"
+
+        while IFS=$'\t' read -r class name id; do
+            key="${class}|${name}"
+            grep -Fxq "$key" "$MRU_FILE" || \
+                printf '%s\t%s\t%s\n' "$class" "$name" "$id"
+        done <<< "$entries"
+    } | awk '!seen[$0]++'
+)
+
+selected=$(
+    while IFS=$'\t' read -r class name id; do
+        printf '%s | %s\n' "$class" "$name"
+    done <<< "$ordered" |
     rofi -dmenu -i -p "Scratchpad"
 )
 
 [ -z "$selected" ] && exit
 
-id="${selected%%|*}"
+class="${selected%% | *}"
+name="${selected#* | }"
 
-i3-msg "[con_id=$id] focus; scratchpad show"
+entry=$(
+    awk -F'\t' -v c="$class" -v n="$name" '
+        $1 == c && $2 == n
+    ' <<< "$entries" | head -n1
+)
+
+id=$(echo "$entry" | cut -f3)
+
+key="${class}|${name}"
+
+{
+    echo "$key"
+    grep -Fxv "$key" "$MRU_FILE" 2>/dev/null
+} > "${MRU_FILE}.tmp"
+
+mv "${MRU_FILE}.tmp" "$MRU_FILE"
+
+i3-msg "[con_id=$id] focus" >/dev/null
