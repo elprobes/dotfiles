@@ -1,0 +1,96 @@
+#!/bin/bash
+
+ETH_CONN="Wired connection 1"
+
+# Stato Ethernet
+if nmcli -t -f DEVICE,STATE device | grep -q '^enp7s0:connected$'; then
+    ETH_ICON="●"
+else
+    ETH_ICON="○"
+fi
+
+# Stato Wi-Fi
+if nmcli -t -f TYPE connection show --active | grep -q 'wireless'; then
+    WIFI_ICON="●"
+else
+    WIFI_ICON="○"
+fi
+
+choice=$(
+    printf "%s Ethernet\n%s Wi-Fi\n" "$ETH_ICON" "$WIFI_ICON" |
+    rofi -dmenu -i -p "Rete"
+)
+
+case "$choice" in
+
+    *Ethernet)
+        nmcli radio wifi off
+        nmcli connection up "$ETH_CONN" >/dev/null 2>&1
+        notify-send "Rete" "Ethernet attivata"
+        ;;
+
+    *Wi-Fi)
+
+        nmcli connection down "$ETH_CONN" >/dev/null 2>&1
+        nmcli radio wifi on
+
+        active_wifi=$(
+            nmcli -t -f NAME,TYPE connection show --active |
+            awk -F: '$2 ~ /wireless/ {print $1}'
+        )
+
+        wifi_choice=$(
+            {
+                echo "↻ Cerca nuove reti"
+
+                nmcli -t -f NAME,TYPE connection show |
+                awk -F: '$2 ~ /wireless/ {print $1}' |
+                while read -r name; do
+                    if [ "$name" = "$active_wifi" ]; then
+                        echo "● $name"
+                    else
+                        echo "○ $name"
+                    fi
+                done
+            } | rofi -dmenu -i -p "Wi-Fi"
+        )
+
+        [ -z "$wifi_choice" ] && exit 0
+
+        if [ "$wifi_choice" = "↻ Cerca nuove reti" ]; then
+
+            new_ssid=$(
+                nmcli -t -f SSID device wifi list --rescan yes |
+                sed '/^$/d' |
+                sort -u |
+                rofi -dmenu -i -p "Nuove reti"
+            )
+
+            [ -z "$new_ssid" ] && exit 0
+
+            password=$(
+                rofi -dmenu \
+                     -password \
+                     -p "Password $new_ssid"
+            )
+
+            [ -z "$password" ] && exit 0
+
+            if nmcli device wifi connect "$new_ssid" password "$password"; then
+                notify-send "Wi-Fi" "Connesso a $new_ssid"
+            else
+                notify-send "Wi-Fi" "Connessione fallita"
+            fi
+
+            exit 0
+        fi
+
+        wifi_choice="${wifi_choice#● }"
+        wifi_choice="${wifi_choice#○ }"
+
+        nmcli connection up "$wifi_choice" >/dev/null 2>&1
+
+        notify-send "Wi-Fi" "Connesso a $wifi_choice"
+        ;;
+
+esac

@@ -38,6 +38,7 @@ HISTFILE="$HOME/.history"
 
 HISTSIZE=10000
 HISTFILESIZE=10000
+HISTCONTROL=ignoreboth
 
 shopt -s histappend
 
